@@ -2,13 +2,13 @@ package pos.logic;
 
 import pos.data.Data;
 import pos.data.XmlPersister;
+import pos.presentation.cajeros.Controller;
 
-import java.text.DecimalFormat;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Service {
+public class Service { //esto es un singleton
     private static Service theInstance;
 
     public static Service instance(){
@@ -69,5 +69,40 @@ public class Service {
                 .sorted(Comparator.comparing(Cliente::getNombre))
                 .collect(Collectors.toList());
     }
+//================= Cajeros ============
+    public void create(Controller e) throws Exception{
 
- }
+        Controller result = data.getCajeros().stream().filter(i->i.getId().equals(e.getId())).findFirst().orElse(null);
+        if (result==null) data.getCajeros().add(e);
+        else throw new Exception("Cajero ya existe");
+    }
+
+    public Controller read(Controller e) throws Exception{
+        Controller result = data.getCajeros().stream().filter(i->i.getId().equals(e.getId())).findFirst().orElse(null);
+        if (result!=null) return result;
+        else throw new Exception("Cajero no existe");
+    }
+
+    public void update(Controller e) throws Exception{
+        Controller result;
+        try{
+            result = this.read(e);
+            data.getCajeros().remove(result);
+            data.getCajeros().add(e);
+        }catch (Exception ex) {
+            throw new Exception("Cajero no existe");
+        }
+    }
+
+    public void delete(Controller e) throws Exception{
+        data.getCajeros().remove(e);
+    }
+
+    public List<Controller> search(Controller e){
+        return data.getCajeros().stream()
+                .filter(i->i.getNombre().contains(e.getNombre()))
+                .sorted(Comparator.comparing(Controller::getNombre))
+                .collect(Collectors.toList());
+    }
+
+}
