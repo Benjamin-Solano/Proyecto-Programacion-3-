@@ -2,6 +2,7 @@ package pos.presentation.cajeros;
 
 import pos.Application;
 import pos.logic.Cajero;
+import pos.logic.Cliente;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
@@ -23,7 +24,6 @@ public class View implements PropertyChangeListener {
     private JButton buscarButton;
     private JButton reporteButton;
     private JTable listCajero;
-    private JTabbedPane tabbedPane1;
     private JPanel panel;
     private JLabel idLbl;
     private JLabel nombreLbl;
@@ -42,6 +42,20 @@ public class View implements PropertyChangeListener {
                     controller.search(filter);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(panel, ex.getMessage(), "Información", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
+        guardarButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (validate()) {
+                    Cajero n = take();
+                    try {
+                        controller.save(n);
+                        JOptionPane.showMessageDialog(panel, "REGISTRO APLICADO", "", JOptionPane.INFORMATION_MESSAGE);
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(panel, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
             }
         });
