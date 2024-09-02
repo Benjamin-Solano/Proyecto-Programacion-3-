@@ -2,7 +2,7 @@ package pos.logic;
 
 import pos.data.Data;
 import pos.data.XmlPersister;
-import pos.presentation.cajeros.Controller;
+
 
 import java.util.Comparator;
 import java.util.List;
@@ -70,21 +70,21 @@ public class Service { //esto es un singleton
                 .collect(Collectors.toList());
     }
 //================= Cajeros ============
-    public void create(Controller e) throws Exception{
+public void create(Cajero e) throws Exception{
 
-        Controller result = data.getCajeros().stream().filter(i->i.getId().equals(e.getId())).findFirst().orElse(null);
-        if (result==null) data.getCajeros().add(e);
-        else throw new Exception("Cajero ya existe");
-    }
+    Cajero result = data.getCajeros().stream().filter(i->i.getId().equals(e.getId())).findFirst().orElse(null);
+    if (result==null) data.getCajeros().add(e);
+    else throw new Exception("Cajero ya existe");
+}
 
-    public Controller read(Controller e) throws Exception{
-        Controller result = data.getCajeros().stream().filter(i->i.getId().equals(e.getId())).findFirst().orElse(null);
+    public Cajero read(Cajero e) throws Exception{
+        Cajero result = data.getCajeros().stream().filter(i->i.getId().equals(e.getId())).findFirst().orElse(null);
         if (result!=null) return result;
         else throw new Exception("Cajero no existe");
     }
 
-    public void update(Controller e) throws Exception{
-        Controller result;
+    public void update(Cajero e) throws Exception{
+        Cajero result;
         try{
             result = this.read(e);
             data.getCajeros().remove(result);
@@ -94,14 +94,14 @@ public class Service { //esto es un singleton
         }
     }
 
-    public void delete(Controller e) throws Exception{
+    public void delete(Cajero e) throws Exception{
         data.getCajeros().remove(e);
     }
 
-    public List<Controller> search(Controller e){
+    public List<Cajero> search(Cajero e){
         return data.getCajeros().stream()
                 .filter(i->i.getNombre().contains(e.getNombre()))
-                .sorted(Comparator.comparing(Controller::getNombre))
+                .sorted(Comparator.comparing(Cajero::getNombre))
                 .collect(Collectors.toList());
     }
 
