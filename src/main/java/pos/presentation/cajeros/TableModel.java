@@ -26,7 +26,7 @@ public class TableModel extends AbstractTableModel<Cajero> implements javax.swin
 
     @Override
     protected void initColNames(){
-        colNames = new String[5];
+        colNames = new String[2];
         colNames[ID]= "Id";
         colNames[NOMBRE]= "Nombre";
     }

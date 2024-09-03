@@ -1,8 +1,6 @@
 package pos.logic;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlID;
+import jakarta.xml.bind.annotation.*;
 
 import java.util.Objects;
 
@@ -14,54 +12,63 @@ public class Producto {
     String unidadDeMedida;
     float precioUnitario;
     int existencias;
+    @XmlIDREF
+    Categoria categoria;
 
     public Producto() {
-        this("", "", "", 0, 0);
-    }
+        this("", "", "", 0, 0,null);
+    } //null para categoria
 
-    public Producto(String codigo, String descripcion, String unidadDeMedida, float precioUnitario, int existencias) {
+    public Producto(String codigo, String descripcion, String unidadDeMedida, float precioUnitario, int existencias,Categoria categoria) {
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.unidadDeMedida = unidadDeMedida;
         this.precioUnitario = precioUnitario;
         this.existencias = existencias;
+        this.categoria = categoria;
     }
 
-    String getCodigo() {
+    public String getCodigo() {
         return codigo;
     }
 
-    String getDescripcion() {
+    public String getDescripcion() {
         return descripcion;
     }
 
-    String getUnidadDeMedida() {
+    public String getUnidadDeMedida() {
         return unidadDeMedida;
     }
 
-    float getPrecioUnitario() {
+    public float getPrecioUnitario() {
         return precioUnitario;
     }
 
-    float getExistencias() {
+    public float getExistencias() {
         return existencias;
     }
 
-    void setCodigo(String codigo) {
+    public Categoria getCategoria() { return categoria; }
+
+    public void setUnidadDeMedida(String unidadDeMedida) { this.unidadDeMedida = unidadDeMedida;}
+
+    public void setCodigo(String codigo) {
         this.codigo = codigo;
     }
 
-    void setDescripcion(String descripcion) {
+    public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
     }
 
-    void setPrecioUnitario(float precioUnitario) {
+    public void setPrecioUnitario(float precioUnitario) {
         this.precioUnitario = precioUnitario;
     }
 
-    void setExistencias(int existencias) {
+    public void setExistencias(int existencias) {
         this.existencias = existencias;
     }
+
+    public void setCategoria(Categoria categoria) {this.categoria = categoria;}
 
     @Override
     public boolean equals(Object o) {
