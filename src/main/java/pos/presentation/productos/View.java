@@ -137,6 +137,9 @@ public class View implements PropertyChangeListener {
         }
 
         //hay que hacer el validar del comboBox de categoria
+
+
+        
         try {
             Float.parseFloat(PrecioTxtField.getText());
             Preciolbl.setBorder(null);

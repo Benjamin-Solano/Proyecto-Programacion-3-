@@ -26,6 +26,7 @@ public class Producto {
         this.precioUnitario = precioUnitario;
         this.existencias = existencias;
         this.categoria = categoria;
+
     }
 
     public String getCodigo() {

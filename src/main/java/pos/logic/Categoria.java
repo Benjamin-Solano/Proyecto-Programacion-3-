@@ -54,7 +54,7 @@ public class Categoria {
     }
 
     public String toString() {
-        return this.codigo;
+        return this.codigo+"-"+this.nombre;
     }
 
 }

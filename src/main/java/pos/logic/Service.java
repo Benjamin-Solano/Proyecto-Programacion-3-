@@ -140,4 +140,8 @@ public class Service { //esto es un singleton
                 .sorted(Comparator.comparing(Producto::getCodigo))
                 .collect(Collectors.toList());
     }
+    //================= Categoriass ============
+
+
+
 }
