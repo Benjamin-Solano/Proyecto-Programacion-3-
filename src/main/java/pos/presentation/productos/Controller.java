@@ -3,17 +3,17 @@ package pos.presentation.productos;
 import pos.Application;
 import pos.logic.Producto;
 import pos.logic.Service;
-import pos.presentation.cajeros.Model;
-import pos.presentation.cajeros.View;
+import pos.presentation.productos.Model;
+import pos.presentation.productos.View;
 
 import java.util.List;
 
-public class Controller {   //errores por el view que no esta full terminado
+public class Controller {
     View view;
     Model model;
 
     public Controller(View view, Model model) {
-        model.init(Service.instance().search(new Producto));
+        model.init(Service.instance().search(new Producto()));
         this.view = view;
         this.model = model;
         view.setController(this);

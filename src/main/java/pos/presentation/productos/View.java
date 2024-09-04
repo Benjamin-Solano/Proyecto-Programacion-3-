@@ -1,10 +1,9 @@
 package pos.presentation.productos;
 import pos.Application;
-import pos.logic.Cliente;
 import pos.logic.Producto;
-import pos.presentation.clientes.Controller;
-import pos.presentation.clientes.Model;
-import pos.presentation.clientes.TableModel;
+import pos.presentation.productos.Controller;
+import pos.presentation.productos.Model;
+import pos.presentation.productos.TableModel;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
@@ -14,6 +13,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Objects;
 
 public class View implements PropertyChangeListener {
     private JLabel Codigolbl;
@@ -46,8 +46,8 @@ public class View implements PropertyChangeListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    Cliente filter = new Cliente();
-                    filter.setNombre(nombreTxtField.getText());
+                    Producto filter = new Producto();
+                    filter.setCodigo(CodigoTxtfield.getText());
                     controller.search(filter);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(panel, ex.getMessage(), "Información", JOptionPane.INFORMATION_MESSAGE);
@@ -59,7 +59,7 @@ public class View implements PropertyChangeListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (validate()) {
-                    Cliente n = take();
+                    Producto n = take();
                     try {
                         controller.save(n);
                         JOptionPane.showMessageDialog(panel, "REGISTRO APLICADO", "", JOptionPane.INFORMATION_MESSAGE);
@@ -109,32 +109,33 @@ public class View implements PropertyChangeListener {
             Codigolbl.setToolTipText(null);
         }
 
-        if (nombreTxtField.getText().isEmpty()) {
+        if (descripcionTxtField.getText().isEmpty()) {
             valid = false;
-            nombrelbl.setBorder(Application.BORDER_ERROR);
-            nombrelbl.setToolTipText("Nombre requerido");
+            Descripcionlbl.setBorder(Application.BORDER_ERROR);
+            Descripcionlbl.setToolTipText("Espacio requerido");
         } else {
-            nombrelbl.setBorder(null);
-            nombrelbl.setToolTipText(null);
+            Descripcionlbl.setBorder(null);
+            Descripcionlbl.setToolTipText(null);
         }
 
         if (unidadTxtField.getText().isEmpty()) {
             valid = false;
-            unidadTxtField.setBorder(Application.BORDER_ERROR);
-            unidadTxtField.setToolTipText("Telefono requerido");
+            Unidad.setBorder(Application.BORDER_ERROR);
+            Unidad.setToolTipText("Unidad requerido");
         } else {
-            unidadTxtField.setBorder(null);
-            unidadTxtField.setToolTipText(null);
+            Unidad.setBorder(null);
+            Unidad.setToolTipText(null);
         }
-
-        if (PrecioTxtField.getText().isEmpty()) {
+//esto no sirve >:(
+        if (PrecioTxtField.getText().equals("0.0")) {
             valid = false;
             Preciolbl.setBorder(Application.BORDER_ERROR);
-            Preciolbl.setToolTipText("Unidad requerida");
+            Preciolbl.setToolTipText("Precio requerido");
         } else {
             Preciolbl.setBorder(null);
             Preciolbl.setToolTipText(null);
         }
+
         //hay que hacer el validar del comboBox de categoria
         try {
             Float.parseFloat(PrecioTxtField.getText());
@@ -157,8 +158,8 @@ public class View implements PropertyChangeListener {
         e.setUnidadDeMedida(unidadTxtField.getText());
         return e;
     }
-//continuar aca----------------------------------------------
-    // MVC
+
+// MVC
     Model model;
     Controller controller;
 
@@ -175,7 +176,7 @@ public class View implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         switch (evt.getPropertyName()) {
             case Model.LIST:
-                int[] cols = {TableModel.ID, TableModel.NOMBRE, TableModel.TELEFONO, TableModel.EMAIL, TableModel.DESCUENTO};
+                int[] cols = {TableModel.codigo, TableModel.descripcion, TableModel.unidadDeMedida, TableModel.precioUnitario, TableModel.existencias, TableModel.categoria};
                 list.setModel(new TableModel(cols, model.getList()));
                 list.setRowHeight(30);
                 TableColumnModel columnModel = list.getColumnModel();
@@ -183,33 +184,32 @@ public class View implements PropertyChangeListener {
                 columnModel.getColumn(3).setPreferredWidth(150);
                 break;
             case Model.CURRENT:
-                id.setText(model.getCurrent().getId());
-                nombre.setText(model.getCurrent().getNombre());
-                telefono.setText(model.getCurrent().getTelefono());
-                email.setText(model.getCurrent().getEmail());
-                descuento.setText("" + model.getCurrent().getDescuento());
+                CodigoTxtfield.setText(model.getCurrent().getCodigo());
+                descripcionTxtField.setText(model.getCurrent().getDescripcion());
+                unidadTxtField.setText(model.getCurrent().getUnidadDeMedida());
+                PrecioTxtField.setText(Float.toString(model.getCurrent().getPrecioUnitario())); //castear este porque es un float el precio
+               // Existencia.setText("" + model.getCurrent().getDescuento());
 
                 if (model.getMode() == Application.MODE_EDIT) {
-                    id.setEnabled(false);
-                    delete.setEnabled(true);
+                    CodigoTxtfield.setEnabled(false);
+                    borrarButton.setEnabled(true);
                 } else {
-                    id.setEnabled(true);
-                    delete.setEnabled(false);
+                    CodigoTxtfield.setEnabled(true);
+                    borrarButton.setEnabled(false);
                 }
 
-                idLbl.setBorder(null);
-                idLbl.setToolTipText(null);
-                nombreLbl.setBorder(null);
-                nombreLbl.setToolTipText(null);
-                emailLbl.setBorder(null);
-                emailLbl.setToolTipText(null);
-                telefonoLbl.setBorder(null);
-                telefonoLbl.setToolTipText(null);
-                descuentoLbl.setBorder(null);
-                descuentoLbl.setToolTipText(null);
+                Codigolbl.setBorder(null);
+                Codigolbl.setToolTipText(null);
+                nombrelbl.setBorder(null);
+                nombrelbl.setToolTipText(null);
+                Unidad.setBorder(null);
+                Unidad.setToolTipText(null);
+                Preciolbl.setBorder(null);
+                Preciolbl.setToolTipText(null);
+              //habria que ver aca que hay que hacer con categoria
                 break;
             case Model.FILTER:
-                searchNombre.setText(model.getFilter().getNombre());
+                CodigoTxtfield.setText(model.getFilter().getCodigo());
                 break;
         }
 
