@@ -2,15 +2,19 @@ package pos.presentation.productos;
 
 import pos.Application;
 import pos.logic.Producto;
+import pos.logic.Categoria;
+
 import pos.presentation.AbstractModel;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
+import pos.logic.Service;
 
 public class Model extends AbstractModel {
     Producto filter;
     List<Producto> list;
     Producto current;
+    List<Categoria> categorias;
     int mode;
 
     @Override
@@ -19,15 +23,22 @@ public class Model extends AbstractModel {
         firePropertyChange(LIST);
         firePropertyChange(CURRENT);
         firePropertyChange(FILTER);
+        this.categorias = categorias; // Cargar las categorías
+        this.mode = Application.MODE_CREATE;
+        firePropertyChange(LIST);
+        firePropertyChange(CATEGORIAS);
     }
 
     public Model() {
     }
 
-    public void init(List<Producto> list){
+    public void init(List<Producto> list, List<Categoria> categorias) {
         this.list = list;
         this.current = new Producto();
         this.filter = new Producto();
+        this.categorias = categorias; // Cargar las categorías
+        this.mode = Application.MODE_CREATE;
+        firePropertyChange(LIST);
         this.mode= Application.MODE_CREATE;
     }
 
@@ -57,6 +68,12 @@ public class Model extends AbstractModel {
         this.filter = filter;
         firePropertyChange(FILTER);
     }
+    public List<Categoria> getCategorias(){return categorias;}
+
+    public void setCategorias(List<Categoria> categorias) {
+        this.categorias = categorias;
+        firePropertyChange(CATEGORIAS); // Notificar cambios
+    }
 
     public int getMode() {
         return mode;
@@ -69,5 +86,5 @@ public class Model extends AbstractModel {
     public static final String LIST="list";
     public static final String CURRENT="current";
     public static final String FILTER="filter";
-
+    public static final String CATEGORIAS="categorias";
 }

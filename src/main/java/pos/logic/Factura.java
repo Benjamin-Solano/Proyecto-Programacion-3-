@@ -22,7 +22,7 @@ public class Factura {
     @XmlIDREF
     @XmlElementWrapper(name = "lineas")
     @XmlElement(name = "linea")
-    List<Linea> lineas;
+    List<Linea> lineas; //productos
 
     public Factura() {
         this.numero = "";

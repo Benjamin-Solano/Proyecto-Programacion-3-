@@ -1,11 +1,10 @@
 package pos.presentation.productos;
 
 import pos.Application;
+import pos.logic.Categoria;
 import pos.logic.Producto;
 import pos.logic.Service;
-import pos.presentation.productos.Model;
-import pos.presentation.productos.View;
-
+import pos.data.XmlPersister;
 import java.util.List;
 
 public class Controller {
@@ -13,7 +12,26 @@ public class Controller {
     Model model;
 
     public Controller(View view, Model model) {
-        model.init(Service.instance().search(new Producto()));
+    try{
+        List<Producto> productos = Service.instance().getProductos();
+        List<Categoria> categorias = XmlPersister.instance().load().getCategorias();
+
+        // Validar que los productos y categorías no sean nulos
+        if (productos != null && categorias != null) {
+            model.init(productos, categorias);
+
+            // Si la lista de productos no está vacía, establecer el primero como actual
+            if (!productos.isEmpty()) {
+                model.setCurrent(productos.get(0));
+            }
+        } else {
+            System.out.println("Error: Productos o Categorías son nulos.");
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+        System.out.println("Error al cargar productos o categorías: " + e.getMessage());
+    }
+
         this.view = view;
         this.model = model;
         view.setController(this);
@@ -27,6 +45,15 @@ public class Controller {
         model.setList(Service.instance().search(model.getFilter()));
     }
 
+    public void init() {
+        try {
+            // Cargar las categorías desde el archivo XML usando el método de persistencia
+            List<Categoria> categorias = XmlPersister.instance().load().getCategorias();
+            model.init(Service.instance().getProductos(), categorias);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
     public void save(Producto e) throws  Exception{
         switch (model.getMode()) {
             case Application.MODE_CREATE:

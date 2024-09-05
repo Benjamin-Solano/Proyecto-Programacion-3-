@@ -130,16 +130,17 @@ public class Service { //esto es un singleton
             throw new Exception("Producto no existe");
         }
     }
-
     public void delete(Producto e) throws Exception {
         data.getProductos().remove(e);
     }
-
     public List<Producto> search(Producto e) {
         return data.getProductos().stream()
                 .filter(i -> i.getCodigo().contains(e.getCodigo()))
                 .sorted(Comparator.comparing(Producto::getCodigo))
                 .collect(Collectors.toList());
+    }
+    public List<Producto> getProductos() {
+        return data.getProductos();  // Retorna la lista completa de productos
     }
     //================= Categoriass ============
 
@@ -176,7 +177,8 @@ public class Service { //esto es un singleton
                 .filter(i -> i.getCatId().contains(e.getCatId()))
                 .sorted(Comparator.comparing(Categoria::getCatId))
                 .collect(Collectors.toList());
-
-
+    }
+    public List<Categoria> getCategorias() {
+        return data.getCategorias();  // Retorna la lista completa de productos
     }
 }

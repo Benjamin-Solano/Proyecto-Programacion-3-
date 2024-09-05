@@ -21,8 +21,10 @@ public class XmlPersister {
     }
     public XmlPersister(String p) {
        path=p;
-    }  
+    }
+
     public Data load() throws Exception{
+
         JAXBContext jaxbContext = JAXBContext.newInstance(Data.class);
         FileInputStream is = new FileInputStream(path);
         Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
