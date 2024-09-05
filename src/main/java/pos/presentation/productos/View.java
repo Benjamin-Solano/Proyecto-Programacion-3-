@@ -1,19 +1,15 @@
 package pos.presentation.productos;
 import pos.Application;
+import pos.logic.Categoria;
 import pos.logic.Producto;
-import pos.presentation.productos.Controller;
-import pos.presentation.productos.Model;
-import pos.presentation.productos.TableModel;
+import pos.data.XmlPersister;
+import pos.data.Data;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Objects;
 
 public class View implements PropertyChangeListener {
     private JLabel Codigolbl;
@@ -28,20 +24,22 @@ public class View implements PropertyChangeListener {
     private JTextField descripcionTxtField;
     private JTextField unidadTxtField;
     private JLabel Categorialbl;
-    private JComboBox categoriaComboBox;
     private JTextField nombreTxtField;
     private JLabel nombrelbl;
     private JButton buscarButton;
     private JButton reporteButton;
     private JTable list;
     private JPanel panel;
+    private JComboBox<Categoria> categoriaComboBox1;
 
+    private XmlPersister xmlPersister;
 
     public JPanel getPanel() {
         return panel;
     }
 
     public View() {
+
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -96,6 +94,24 @@ public class View implements PropertyChangeListener {
                 controller.clear();
             }
         });
+        ///Categoria despliegue
+// Método para cargar las categorías en el JComboBox
+
+        categoriaComboBox1.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    Data data = XmlPersister.instance().load();  // Cargar datos desde XML
+                    categoriaComboBox1.removeAllItems();          // Limpiar ComboBox antes de cargar nuevos datos
+                    for (Categoria categoria : data.getCategorias()) {
+                        categoriaComboBox1.addItem(categoria);
+                    }
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(panel, "Error al cargar categorías: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
     }
 
     private boolean validate() {
@@ -127,7 +143,7 @@ public class View implements PropertyChangeListener {
             Unidad.setToolTipText(null);
         }
 //esto no sirve >:(
-        if (PrecioTxtField.getText().equals("0.0")) {
+        if (PrecioTxtField.getText().equals("0.0")) { /*).isEmpty()*/
             valid = false;
             Preciolbl.setBorder(Application.BORDER_ERROR);
             Preciolbl.setToolTipText("Precio requerido");
@@ -136,10 +152,17 @@ public class View implements PropertyChangeListener {
             Preciolbl.setToolTipText(null);
         }
 
-        //hay que hacer el validar del comboBox de categoria
+        //validar del comboBox de categoria
 
+        if (categoriaComboBox1.getSelectedItem() == null) {
+            valid = false;
+            Categorialbl.setBorder(Application.BORDER_ERROR);
+            Categorialbl.setToolTipText("Categoría requerida");
+        } else {
+            Categorialbl.setBorder(null);
+            Categorialbl.setToolTipText(null);
+        }
 
-        
         try {
             Float.parseFloat(PrecioTxtField.getText());
             Preciolbl.setBorder(null);
@@ -159,6 +182,7 @@ public class View implements PropertyChangeListener {
         e.setDescripcion(descripcionTxtField.getText());
         e.setPrecioUnitario(Float.parseFloat(PrecioTxtField.getText())); //castear esto/parsearlo
         e.setUnidadDeMedida(unidadTxtField.getText());
+        e.setCategoria((Categoria) categoriaComboBox1.getSelectedItem()); /*casteo*/
         return e;
     }
 
@@ -192,6 +216,7 @@ public class View implements PropertyChangeListener {
                 unidadTxtField.setText(model.getCurrent().getUnidadDeMedida());
                 PrecioTxtField.setText(Float.toString(model.getCurrent().getPrecioUnitario())); //castear este porque es un float el precio
                // Existencia.setText("" + model.getCurrent().getDescuento());
+                categoriaComboBox1.setSelectedItem(model.getCurrent().getCategoria());  // Mostrar categoría en el ComboBox
 
                 if (model.getMode() == Application.MODE_EDIT) {
                     CodigoTxtfield.setEnabled(false);

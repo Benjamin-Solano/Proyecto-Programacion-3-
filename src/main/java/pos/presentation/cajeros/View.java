@@ -2,7 +2,6 @@ package pos.presentation.cajeros;
 
 import pos.Application;
 import pos.logic.Cajero;
-import pos.logic.Cliente;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;

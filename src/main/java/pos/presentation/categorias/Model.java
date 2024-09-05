@@ -1,16 +1,17 @@
-package pos.presentation.cajeros;
+package pos.presentation.categorias;
+
 
 import pos.Application;
-import pos.logic.Cajero;
+import pos.logic.Categoria;
 import pos.presentation.AbstractModel;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Model extends AbstractModel {
-    Cajero filter;
-    List<Cajero> list;
-    Cajero current;
+    Categoria filter;
+    List<Categoria> list;
+    Categoria current;
     int mode;
 
     @Override
@@ -24,36 +25,36 @@ public class Model extends AbstractModel {
     public Model() {
     }
 
-    public void init(List<Cajero> list){
+    public void init(List<Categoria> list){
         this.list = list;
-        this.current = new Cajero();
-        this.filter = new Cajero();
+        this.current = new Categoria();
+        this.filter = new Categoria();
         this.mode= Application.MODE_CREATE;
     }
 
-    public List<Cajero> getList() {
+    public List<Categoria> getList() {
         return list;
     }
 
-    public void setList(List<Cajero> list){
+    public void setList(List<Categoria> list){
         this.list = list;
         firePropertyChange(LIST);
     }
 
-    public Cajero getCurrent() {
+    public Categoria getCurrent() {
         return current;
     }
 
-    public void setCurrent(Cajero current) {
+    public void setCurrent(Categoria current) {
         this.current = current;
         firePropertyChange(CURRENT);
     }
 
-    public Cajero getFilter() {
+    public Categoria getFilter() {
         return filter;
     }
 
-    public void setFilter(Cajero filter) {
+    public void setFilter(Categoria filter) {
         this.filter = filter;
         firePropertyChange(FILTER);
     }
