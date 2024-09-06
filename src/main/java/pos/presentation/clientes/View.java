@@ -143,7 +143,15 @@ public class View implements PropertyChangeListener {
             descuentoLbl.setBorder(Application.BORDER_ERROR);
             descuentoLbl.setToolTipText("Descuento invalido");
         }
-
+        try {
+            Integer.parseInt(telefono.getText());
+            telefonoLbl.setBorder(null);
+            telefonoLbl.setToolTipText(null);
+        } catch (NumberFormatException e) {
+            valid = false;
+            telefonoLbl.setBorder(Application.BORDER_ERROR);
+            telefonoLbl.setToolTipText("Teléfono inválido");
+        }
         return valid;
     }
 
