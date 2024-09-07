@@ -182,3 +182,44 @@ public class Service { //esto es un singleton
         return data.getCategorias();  // Retorna la lista completa de productos
     }
 }
+
+//================= Lineas ============
+
+public void create(Linea e) throws Exception {
+
+    Categoria result = data.getCategorias().stream().filter(i -> i.getCatId().equals(e.getCatId())).findFirst().orElse(null);
+    if (result == null) data.getCategorias().add(e);
+    else throw new Exception("Categoria ya existe");
+}
+
+public Categoria read(Categoria e) throws Exception {
+    Categoria result = data.getCategorias().stream().filter(i -> i.getCatId().equals(e.getCatId())).findFirst().orElse(null);
+    if (result != null) return result;
+    else throw new Exception("Categoria no existe");
+}
+
+public void update(Categoria e) throws Exception {
+    Categoria result;
+    try {
+        result = this.read(e);
+        data.getCategorias().remove(result);
+        data.getCategorias().add(e);
+    } catch (Exception ex) {
+        throw new Exception("Categoria no existe");
+    }
+}
+
+public void delete(Categoria e) throws Exception {
+    data.getCategorias().remove(e);
+}
+
+public List<Categoria> search(Categoria e) {
+    return data.getCategorias().stream()
+            .filter(i -> i.getCatId().contains(e.getCatId()))
+            .sorted(Comparator.comparing(Categoria::getCatId))
+            .collect(Collectors.toList());
+}
+public List<Categoria> getCategorias() {
+    return data.getCategorias();  // Retorna la lista completa de productos
+}
+}

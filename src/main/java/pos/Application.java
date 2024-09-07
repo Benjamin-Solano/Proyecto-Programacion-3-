@@ -42,6 +42,13 @@ public class Application {
         ProductosController = new pos.presentation.productos.Controller(productosView, productosModel);
         Icon productosIcon= new ImageIcon(Application.class.getResource("/pos/presentation/icons/productos.png"));
 
+
+        pos.presentation.historico.Model historicoModel= new pos.presentation.historico.Model();
+        pos.presentation.historico.View historicoview = new pos.presentation.historico.View();
+        historicoController = new pos.presentation.historico.Controller(historicoview,historicoModel);
+        Icon historicoIcon= new ImageIcon(Application.class.getResource("/pos/presentation/icons/historial.png"));
+
+
         tabbedPane.addTab("Clientes  ",clientesIcon,clientesView.getPanel());
         tabbedPane.addTab("Cajeros ",cajeroIcon,cajerosView.getPanel());
         tabbedPane.addTab("Productos ",productosIcon,productosView.getPanel());
