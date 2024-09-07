@@ -181,45 +181,45 @@ public class Service { //esto es un singleton
     public List<Categoria> getCategorias() {
         return data.getCategorias();  // Retorna la lista completa de productos
     }
-}
 
-//================= Lineas ============
+    //================= Lineas ============
 
-public void create(Linea e) throws Exception {
+    public void create(Linea e) throws Exception {
 
-    Categoria result = data.getCategorias().stream().filter(i -> i.getCatId().equals(e.getCatId())).findFirst().orElse(null);
-    if (result == null) data.getCategorias().add(e);
-    else throw new Exception("Categoria ya existe");
-}
+        Linea result = data.getLineas().stream().filter(i -> i.getNumero().equals(e.getNumero())).findFirst().orElse(null);
+        if (result == null) data.getLineas().add(e);
+        else throw new Exception("Linea ya existe");
+    }
 
-public Categoria read(Categoria e) throws Exception {
-    Categoria result = data.getCategorias().stream().filter(i -> i.getCatId().equals(e.getCatId())).findFirst().orElse(null);
-    if (result != null) return result;
-    else throw new Exception("Categoria no existe");
-}
+    public Linea read(Linea e) throws Exception {
+        Linea result = data.getLineas().stream().filter(i -> i.getNumero().equals(e.getNumero())).findFirst().orElse(null);
+        if (result != null) return result;
+        else throw new Exception("Linea no existe");
+    }
 
-public void update(Categoria e) throws Exception {
-    Categoria result;
-    try {
-        result = this.read(e);
-        data.getCategorias().remove(result);
-        data.getCategorias().add(e);
-    } catch (Exception ex) {
-        throw new Exception("Categoria no existe");
+    public void update(Linea e) throws Exception {
+        Linea result;
+        try {
+            result = this.read(e);
+            data.getLineas().remove(result);
+            data.getLineas().add(e);
+        } catch (Exception ex) {
+            throw new Exception("Linea no existe");
+        }
+    }
+
+    public void delete(Linea e) throws Exception {
+        data.getLineas().remove(e);
+    }
+
+    public List<Linea> search(Linea e) {
+        return data.getLineas().stream()
+                .filter(i -> i.numero.contains(e.getNumero()))
+                .sorted(Comparator.comparing(Linea::getNumero))
+                .collect(Collectors.toList());
+    }
+    public List<Linea> getLineas() {
+        return data.getLineas();  // Retorna la lista completa de Lineas
     }
 }
 
-public void delete(Categoria e) throws Exception {
-    data.getCategorias().remove(e);
-}
-
-public List<Categoria> search(Categoria e) {
-    return data.getCategorias().stream()
-            .filter(i -> i.getCatId().contains(e.getCatId()))
-            .sorted(Comparator.comparing(Categoria::getCatId))
-            .collect(Collectors.toList());
-}
-public List<Categoria> getCategorias() {
-    return data.getCategorias();  // Retorna la lista completa de productos
-}
-}

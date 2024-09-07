@@ -45,7 +45,7 @@ public class Application {
 
         pos.presentation.historico.Model historicoModel= new pos.presentation.historico.Model();
         pos.presentation.historico.View historicoview = new pos.presentation.historico.View();
-        historicoController = new pos.presentation.historico.Controller(historicoview,historicoModel);
+        historicoController = new pos.presentation.historico.Controller(historicoView,historicoModel);
         Icon historicoIcon= new ImageIcon(Application.class.getResource("/pos/presentation/icons/historial.png"));
 
 
