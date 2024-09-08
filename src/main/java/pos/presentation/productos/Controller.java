@@ -109,10 +109,9 @@ public class Controller {
         table.addCell("Precio");
         table.addCell("Existencias");
         table.addCell("Categoría");
-
         List<Producto> productos = model.getList();
 
-        // Llenar la tabla con los productos
+        // Llena la tabla con los productos
         for (Producto producto : productos) {
             table.addCell(producto.getCodigo());
             table.addCell(producto.getDescripcion());
@@ -121,12 +120,10 @@ public class Controller {
             table.addCell(String.valueOf(producto.getExistencias()));
             table.addCell(producto.getCategoria().getNombre());
         }
-        // Añadir la tabla al documento
-        document.add(table);
-        // Cerrar
-        document.close();
+        document.add(table);  // Añade la tabla al documento
+        document.close(); // Cerrar
 
-        // Imprimir la ruta donde se guardó el archivo
-        System.out.println("Reporte PDF generado en: " + new File(pdfPath).getAbsolutePath());
+        // Imprimir ruta donde se guardó
+        System.out.println("Reporte de productos PDF generado en: " + new File(pdfPath).getAbsolutePath());
     }
 }

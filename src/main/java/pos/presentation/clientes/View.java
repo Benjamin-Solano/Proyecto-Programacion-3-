@@ -4,9 +4,7 @@ import pos.Application;
 import pos.logic.Cliente;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import javax.swing.table.TableColumnModel;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -22,7 +20,7 @@ public class View implements PropertyChangeListener {
     private JTable list;
     private JButton delete;
     private JLabel searchNombreLbl;
-    private JButton report;
+    private JButton reporteButton;
     private JTextField id;
     private JTextField nombre;
     private JTextField email;
@@ -92,6 +90,17 @@ public class View implements PropertyChangeListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 controller.clear();
+            }
+        });
+        reporteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    controller.generarReporte();
+                    JOptionPane.showMessageDialog(panel, "Reporte PDF generado con éxito.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(panel, "Error al generar el reporte: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         });
     }
