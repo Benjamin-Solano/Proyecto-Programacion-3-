@@ -3,6 +3,7 @@ package pos.presentation.historico;
 import pos.Application;
 import pos.logic.Cliente;
 import pos.data.Data;
+import pos.logic.Linea;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -16,8 +17,8 @@ public class View {
     private JButton buscarButton;
     private JButton reporteButton;
     private JTable list;
-    private JTable table1;
     private JPanel panel;
+    private JTable table1;
     private Data data;
 
     public JPanel getPanel() {
@@ -31,7 +32,7 @@ public class View {
                 try {
                     Cliente filter = new Cliente();
                     filter.setNombre(clienteTxt.getText());
-                    controller.search(filter);
+                    //search(filter);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(panel, ex.getMessage(), "Información", JOptionPane.INFORMATION_MESSAGE);
                 }
@@ -64,4 +65,20 @@ public class View {
         e.setNombre(clienteTxt.getText());
         return e;
     }
+
+    // MVC
+    Model model;
+    Controller controller;
+
+    public void setModel(Model model) {
+        this.model = model;
+       // model.addPropertyChangeListener(this); Esto es para las actualizaciones, falta por hacer
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
+
 }
+
+

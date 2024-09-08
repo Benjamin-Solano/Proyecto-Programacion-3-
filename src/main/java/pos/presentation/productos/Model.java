@@ -25,7 +25,6 @@ public class Model extends AbstractModel {
         firePropertyChange(FILTER);
         this.categorias = categorias; // Cargar las categorías
         this.mode = Application.MODE_CREATE;
-        firePropertyChange(LIST);
         firePropertyChange(CATEGORIAS);
     }
 

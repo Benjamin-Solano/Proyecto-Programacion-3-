@@ -1,10 +1,17 @@
 package pos.presentation.productos;
 
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
 import pos.Application;
 import pos.logic.Categoria;
 import pos.logic.Producto;
 import pos.logic.Service;
 import pos.data.XmlPersister;
+
+import java.io.File;
 import java.util.List;
 
 public class Controller {
@@ -85,5 +92,41 @@ public class Controller {
         model.setMode(Application.MODE_CREATE);
         model.setCurrent(new Producto());
     }
+    public void generarReporte() throws Exception {
+        String pdfPath = "reporte_productos.pdf";
 
+        PdfWriter writer = new PdfWriter(pdfPath);
+        PdfDocument pdfDoc = new PdfDocument(writer);
+        Document document = new Document(pdfDoc);
+        document.add(new Paragraph("Reporte de Productos"));
+
+        // Crear la tabla
+        float[] columnWidths = {100, 200, 100, 100, 100, 200}; // Ancho de columnas
+        Table table = new Table(columnWidths);
+        table.addCell("Código");
+        table.addCell("Descripción");
+        table.addCell("Unidad de Medida");
+        table.addCell("Precio");
+        table.addCell("Existencias");
+        table.addCell("Categoría");
+
+        List<Producto> productos = model.getList();
+
+        // Llenar la tabla con los productos
+        for (Producto producto : productos) {
+            table.addCell(producto.getCodigo());
+            table.addCell(producto.getDescripcion());
+            table.addCell(producto.getUnidadDeMedida());
+            table.addCell(String.valueOf(producto.getPrecioUnitario()));
+            table.addCell(String.valueOf(producto.getExistencias()));
+            table.addCell(producto.getCategoria().getNombre());
+        }
+        // Añadir la tabla al documento
+        document.add(table);
+        // Cerrar
+        document.close();
+
+        // Imprimir la ruta donde se guardó el archivo
+        System.out.println("Reporte PDF generado en: " + new File(pdfPath).getAbsolutePath());
+    }
 }

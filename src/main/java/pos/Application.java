@@ -44,7 +44,7 @@ public class Application {
 
 
         pos.presentation.historico.Model historicoModel= new pos.presentation.historico.Model();
-        pos.presentation.historico.View historicoview = new pos.presentation.historico.View();
+        pos.presentation.historico.View historicoView = new pos.presentation.historico.View();
         historicoController = new pos.presentation.historico.Controller(historicoView,historicoModel);
         Icon historicoIcon= new ImageIcon(Application.class.getResource("/pos/presentation/icons/historial.png"));
 
@@ -52,6 +52,7 @@ public class Application {
         tabbedPane.addTab("Clientes  ",clientesIcon,clientesView.getPanel());
         tabbedPane.addTab("Cajeros ",cajeroIcon,cajerosView.getPanel());
         tabbedPane.addTab("Productos ",productosIcon,productosView.getPanel());
+        tabbedPane.addTab("Historico ",historicoIcon,historicoView.getPanel());
 
         window.setSize(900,450);
         window.setResizable(false);
@@ -65,6 +66,7 @@ public class Application {
     public static pos.presentation.clientes.Controller clientesController;
     public static pos.presentation.cajeros.Controller cajerosController;
     public static pos.presentation.productos.Controller ProductosController;
+    public static pos.presentation.historico.Controller  historicoController;
 
     public static JFrame window;
 

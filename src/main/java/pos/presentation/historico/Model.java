@@ -19,6 +19,7 @@ public class Model extends AbstractModel {
         firePropertyChange(LIST);
         firePropertyChange(CURRENT);
         firePropertyChange(FILTER);
+        this.mode = Application.MODE_CREATE;
     }
 
     public Model() {
@@ -65,6 +66,7 @@ public class Model extends AbstractModel {
     public void setMode(int mode) {
         this.mode = mode;
     }
+
 
     public static final String LIST="list";
     public static final String CURRENT="current";

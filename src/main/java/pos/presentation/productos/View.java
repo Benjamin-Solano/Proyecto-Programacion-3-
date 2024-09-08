@@ -95,6 +95,18 @@ public class View implements PropertyChangeListener {
                 controller.clear();
             }
         });
+
+        reporteButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    controller.generarReporte();
+                    JOptionPane.showMessageDialog(panel, "Reporte PDF generado con éxito.", "Información", JOptionPane.INFORMATION_MESSAGE);
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(panel, "Error al generar el reporte: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
     }
 
     private boolean validate() {
@@ -134,7 +146,7 @@ public class View implements PropertyChangeListener {
             Preciolbl.setBorder(null);
             Preciolbl.setToolTipText(null);
         }
-        if (ExistenciaTxtField.getText().equals("0.0")) {
+        if (ExistenciaTxtField.getText().isEmpty()) {
             valid = false;
             ExistenciaLbl.setBorder(Application.BORDER_ERROR);
             ExistenciaLbl.setToolTipText("Existencia requerido");
