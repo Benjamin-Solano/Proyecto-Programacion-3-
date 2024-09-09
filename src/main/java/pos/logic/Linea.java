@@ -14,7 +14,6 @@ public class Linea {
     @XmlIDREF
     Producto producto;
     @XmlIDREF
-    Factura factura;
     int cantidad;
     float descuento;
 
@@ -22,13 +21,11 @@ public class Linea {
         this.cantidad = 0;
         this.descuento = 0;
         this.producto = new Producto();
-        this.factura = new Factura();
         this.numero = "";
     }
-    public Linea(String numero,Producto producto, Factura factura, int cantidad, float descuento) {
+    public Linea(String numero,Producto producto, int cantidad, float descuento) {
         this.numero = numero;
         this.producto = producto;
-        this.factura = factura;
         this.cantidad = cantidad;
         this.descuento = descuento;
     }
@@ -37,9 +34,6 @@ public class Linea {
 
     public Producto getProducto() {return producto;}
     public void setProducto(Producto producto) {this.producto = producto;}
-
-    public Factura getFactura() {return factura;}
-    public void setFactura(Factura factura) {this.factura = factura;}
 
     public int getCantidad() {return cantidad;}
     public void setCantidad(int cantidad) {this.cantidad = cantidad;}
