@@ -13,7 +13,6 @@ public class Linea {
     String numero;
     @XmlIDREF
     Producto producto;
-    @XmlIDREF
     int cantidad;
     float descuento;
 

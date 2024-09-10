@@ -26,7 +26,6 @@ public class Controller {
         // Validar que los productos y categorías no sean nulos
         if (productos != null && categorias != null) {
             model.init(productos, categorias);
-
             // Si la lista de productos no está vacía, establecer el primero como actual
             if (!productos.isEmpty()) {
                 model.setCurrent(productos.get(0));
