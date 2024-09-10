@@ -4,6 +4,7 @@ import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
 import jakarta.xml.bind.annotation.XmlID;
 import jakarta.xml.bind.annotation.XmlIDREF;
+import jakarta.xml.bind.annotation.XmlElement;
 
 import java.util.Objects;
 
@@ -13,6 +14,7 @@ public class Linea {
     String numero;
     @XmlIDREF
     Producto producto;
+    @XmlElement
     int cantidad;
     float descuento;
 

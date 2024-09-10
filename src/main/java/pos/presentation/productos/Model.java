@@ -64,8 +64,7 @@ public class Model extends AbstractModel {
     }
 
     public void setFilter(Producto filter) {
-        this.filter = filter;
-        firePropertyChange(FILTER);
+        this.filter = filter; firePropertyChange(FILTER);
     }
     public List<Categoria> getCategorias(){return categorias;}
 
