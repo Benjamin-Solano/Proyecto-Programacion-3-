@@ -29,7 +29,7 @@ public class Controller {
             List<Cliente> clientes = XmlPersister.instance().load().getClientes();
             List<Cajero> cajeros = XmlPersister.instance().load().getCajeros();
 
-            // Validar que los lias, cajeros y clientes no sean nulos
+            // Validar que los lineas, cajeros y clientes no sean nulos
             if (lineas != null && cajeros!= null && clientes!=null) {
                 model.init(lineas, cajeros, clientes);
                 // Si la lista de lineas no está vacía, establecer el primero como actual
