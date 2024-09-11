@@ -1,6 +1,11 @@
 package pos.presentation.estadistica;
 
+import pos.presentation.estadistica.Controller;
+import pos.presentation.estadistica.Model;
+
 import javax.swing.*;
+import java.awt.*;
+import java.beans.PropertyChangeListener;
 
 public class View {
     private JPanel panel;
@@ -14,4 +19,18 @@ public class View {
     private JTable table1;
     private JButton button3;
     private JButton button4;
+
+
+    // MVC
+    pos.presentation.estadistica.Model model;
+    pos.presentation.estadistica.Controller controller;
+
+    public void setModel(Model model) {
+        this.model = model;
+        model.addPropertyChangeListener((PropertyChangeListener) this);
+    }
+
+    public Component getPanel() {
+        return panel;
+    }
 }

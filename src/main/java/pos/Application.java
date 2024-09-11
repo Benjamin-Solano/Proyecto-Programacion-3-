@@ -7,6 +7,7 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Objects;
 
 public class Application {
     public static void main(String[] args) {
@@ -52,17 +53,23 @@ public class Application {
         historicoController = new pos.presentation.historico.Controller(historicoView,historicoModel);
         Icon historicoIcon= new ImageIcon(Application.class.getResource("/pos/presentation/icons/historial.png"));
 
+        pos.presentation.estadistica.Model estadisticaModel = new pos.presentation.estadistica.Model();
+        pos.presentation.estadistica.View estadisticaView = new pos.presentation.estadistica.View();
+        // estadisticaController = new pos.presentation.estadistica.Controller(estadisticaView,estadisticaModel);
+        Icon estadisticoIcon= new ImageIcon(Objects.requireNonNull(Application.class.getResource("/pos/presentation/icons/estadistico.png")));
+
 
         tabbedPane.addTab("Clientes  ",clientesIcon,clientesView.getPanel());
         tabbedPane.addTab("Cajeros ",cajeroIcon,cajerosView.getPanel());
         tabbedPane.addTab("Productos ",productosIcon,productosView.getPanel());
         tabbedPane.addTab("Facturacion",facturacionIcon,facturacionView.getPanel());
         tabbedPane.addTab("Historico ",historicoIcon,historicoView.getPanel());
+        tabbedPane.addTab("Estadistica",estadisticaView.getPanel());
 
         window.setSize(900,450);
         window.setResizable(false);
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        window.setIconImage((new ImageIcon(Application.class.getResource("/pos/presentation/icons/icon.png"))).getImage());
+        window.setIconImage((new ImageIcon(Objects.requireNonNull(Application.class.getResource("/pos/presentation/icons/icon.png")))).getImage());
         window.setTitle("POS: Point Of Sale");
         window.setVisible(true);
 
@@ -73,6 +80,7 @@ public class Application {
     public static pos.presentation.productos.Controller ProductosController;
     public static pos.presentation.facturacion.Controller  Factura;
     public static pos.presentation.historico.Controller  historicoController;
+    public static pos.presentation.estadistica.Controller estadisticaController;
 
     public static JFrame window;
 
