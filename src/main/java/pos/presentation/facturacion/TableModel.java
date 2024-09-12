@@ -48,8 +48,8 @@ public class TableModel extends AbstractTableModel<Linea> implements javax.swing
         colNames[CANTIDAD]= "Cantidad";
         colNames[PRECIO]= "Precio";
         colNames[DESCUENTO]= "Descuento";
-        colNames[NETO]= "PrecioUnitario";
-        colNames[IMPORTE]= "PrecioUnitario";
+        colNames[NETO]= "Neto";
+        colNames[IMPORTE]= "Importe";
     }
 
 }

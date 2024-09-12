@@ -138,7 +138,7 @@ public class View implements PropertyChangeListener {
             Unidad.setToolTipText(null);
         }
 //esto no sirve >:(
-        if (PrecioTxtField.getText().equals("0.0")) { /*).isEmpty()*/
+        if (PrecioTxtField.getText().contentEquals("0.0") || PrecioTxtField.getText().isEmpty()) { /*).isEmpty()*/
             valid = false;
             Preciolbl.setBorder(Application.BORDER_ERROR);
             Preciolbl.setToolTipText("Precio requerido");
@@ -146,7 +146,7 @@ public class View implements PropertyChangeListener {
             Preciolbl.setBorder(null);
             Preciolbl.setToolTipText(null);
         }
-        if (ExistenciaTxtField.getText().isEmpty()) {
+        if (ExistenciaTxtField.getText().isEmpty()|| ExistenciaTxtField.getText().isEmpty()) {
             valid = false;
             ExistenciaLbl.setBorder(Application.BORDER_ERROR);
             ExistenciaLbl.setToolTipText("Existencia requerido");
@@ -218,7 +218,7 @@ public class View implements PropertyChangeListener {
                 unidadTxtField.setText(model.getCurrent().getUnidadDeMedida());
                 PrecioTxtField.setText(Float.toString(model.getCurrent().getPrecioUnitario())); //castear este porque es un float el precio
               //  ExistenciaLbl.setText("" + model.getCurrent().getExistencias());
-                categoriaComboBox1.setSelectedItem(model.getCurrent().getCategoria());  // Mostrar categoría en el ComboBox
+                categoriaComboBox1.setSelectedItem(model.getCurrent().getCategoria());  // Mostrar categoría en el ComboBox, actual seleccionada
 
                 if (model.getMode() == Application.MODE_EDIT) {
                     CodigoTxtfield.setEnabled(false);
