@@ -99,6 +99,19 @@ public class Controller {
         model.setCurrent(new Linea());
     }
     public void actualizarComboBox(){
-
+        try {
+            List<Cajero> cajeros = XmlPersister.instance().load().getCajeros();
+            List<Cliente> clientes = XmlPersister.instance().load().getClientes();
+            if (cajeros != null && clientes != null) {
+                // Actualizar el modelo con los nuevos datos
+                model.setCajeros(cajeros);
+                model.setClientes(clientes);
+            } else {
+                System.out.println("Error: Los cajeros o clientes son nulos.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error al actualizar los datos de los ComboBox: " + e.getMessage());
+        }
     }
 }

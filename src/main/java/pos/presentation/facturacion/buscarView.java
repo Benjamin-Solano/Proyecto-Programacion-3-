@@ -7,6 +7,9 @@ public class buscarView extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
+    private JLabel DescripcionLbl;
+    private JTextField DescripcionTextField;
+    private JTable table1;
 
     public buscarView() {
         setContentPane(contentPane);

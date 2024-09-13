@@ -7,6 +7,15 @@ public class cobrarView extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
+    private JTextField TarjetaTextField;
+    private JTextField EfectivoTextField;
+    private JTextField ChequeTextField;
+    private JTextField SinpeTextField;
+    private JTextField ImporteTextField;
+    private JLabel EfectivoLbl;
+    private JLabel TarjetaLbl;
+    private JLabel ChequeLbl;
+    private JLabel SinpeLbl;
 
     public cobrarView() {
         setContentPane(contentPane);
