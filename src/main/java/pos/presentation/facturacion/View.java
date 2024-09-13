@@ -7,10 +7,7 @@ import pos.logic.*;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -137,13 +134,18 @@ public class View implements PropertyChangeListener {
         quitarButton.addActionListener(new ActionListener() { //Este es similar al limpiarButton
             @Override
             public void actionPerformed(ActionEvent e) {
-                //regresar cantidades modificadas a originales, revisar
-                int anteriorExistencia=0;
-                for(Linea temp: Service.instance().getLineas()) {
-                    anteriorExistencia= (int)temp.getProducto().getExistencias();
-                    temp.getProducto().setExistencias(temp.getCantidad()+anteriorExistencia);
+                int selectedRow = list.getSelectedRow();
+                if (selectedRow >= 0) { // Verificar si se ha seleccionado una fila
+                    Linea lineaSeleccionada = model.getList().get(selectedRow); // Obtener la línea seleccionada
+                    Producto producto = lineaSeleccionada.getProducto();
+                    producto.setExistencias((int) (producto.getExistencias() + lineaSeleccionada.getCantidad()));
+                    model.getList().remove(selectedRow);
+
+                    model.notificarCambioLista();
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Debe seleccionar una línea para eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                controller.clear();
             }
         });
         descuentoButton.addActionListener(new ActionListener() {
@@ -159,20 +161,24 @@ public class View implements PropertyChangeListener {
         cancelarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //regresar cantidades modificadas a originales, revisar
-                int anteriorExistencia=0;
                 for(Linea temp: Service.instance().getLineas()) {
-                    anteriorExistencia= (int)temp.getProducto().getExistencias();
-                    temp.getProducto().setExistencias(temp.getCantidad()+anteriorExistencia);
+                    temp.getProducto().setExistencias((int)(temp.getCantidad()+temp.getProducto().getExistencias()));
                 }
                 try {
-                    controller.delete();
+                    controller.clear();
                     JOptionPane.showMessageDialog(panel1, "Compra borrada", "", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(panel1, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
+        panel1.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                controller.actualizarComboBox();
+            }
+        });
+
     }
 
     private boolean validate() {

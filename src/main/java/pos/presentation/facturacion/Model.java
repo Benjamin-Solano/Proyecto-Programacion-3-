@@ -22,12 +22,7 @@ public class Model  extends AbstractModel {
         firePropertyChange(LIST);
         firePropertyChange(CURRENT);
         firePropertyChange(FILTER);
-
-        this.cajeros = cajeros; // Cargar las cajeros en sistema
-        this.mode = Application.MODE_CREATE;
         firePropertyChange(CAJEROS);
-        this.clientes = clientes; // Cargar las clientes en sistema
-        this.mode = Application.MODE_CREATE;
         firePropertyChange(CLIENTES);
 
     }
@@ -37,13 +32,16 @@ public class Model  extends AbstractModel {
         this.filter = new Linea();
         this.clientes = clientes; // Cargar las clientes
         this.cajeros=cajeros;
-        this.mode = Application.MODE_CREATE;
         firePropertyChange(LIST);
+        firePropertyChange(CAJEROS);
+        firePropertyChange(CLIENTES);
         this.mode= Application.MODE_CREATE;
     }
     public Model() {
     }
-
+    public void notificarCambioLista() {
+        firePropertyChange(LIST);
+    }
     public List<Linea> getList(){
         return list;
     }
