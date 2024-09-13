@@ -20,8 +20,8 @@ public class Controller {
 
     public Controller(View view, Model model) {
     try{
-        List<Producto> productos = Service.instance().getProductos();
-        List<Categoria> categorias = XmlPersister.instance().load().getCategorias();
+        List<Producto> productos = Service.instance().getProductos();//productos disponibles
+        List<Categoria> categorias = XmlPersister.instance().load().getCategorias(); //cargando las categorias del xml
 
         // Validar que los productos y categorías no sean nulos
         if (productos != null && categorias != null) {
@@ -37,7 +37,6 @@ public class Controller {
         e.printStackTrace();
         System.out.println("Error al cargar productos o categorías: " + e.getMessage());
     }
-
         this.view = view;
         this.model = model;
         view.setController(this);

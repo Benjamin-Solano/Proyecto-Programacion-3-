@@ -137,8 +137,7 @@ public class View implements PropertyChangeListener {
             Unidad.setBorder(null);
             Unidad.setToolTipText(null);
         }
-//esto no sirve >:(
-        if (PrecioTxtField.getText().contentEquals("0.0") || PrecioTxtField.getText().isEmpty()) { /*).isEmpty()*/
+        if (PrecioTxtField.getText().contentEquals("0.0") || PrecioTxtField.getText().isEmpty()) {
             valid = false;
             Preciolbl.setBorder(Application.BORDER_ERROR);
             Preciolbl.setToolTipText("Precio requerido");

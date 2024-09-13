@@ -2,15 +2,20 @@ package pos.presentation.historico;
 
 import pos.Application;
 import pos.logic.Cliente;
+import pos.logic.Factura;
+import pos.logic.Linea;
 import pos.presentation.AbstractModel;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Model extends AbstractModel {
-    Cliente filter;
-    List<Cliente> list;
-    Cliente current;
+    Factura filterFactura;
+    Linea filterLinea;
+    List<Factura> listFacturas;
+    List<Linea> listLineas;
+    Factura currentFactura;
+    Linea currentLinea;
     int mode;
 
     @Override
@@ -19,17 +24,15 @@ public class Model extends AbstractModel {
         firePropertyChange(LIST);
         firePropertyChange(CURRENT);
         firePropertyChange(FILTER);
+
         this.mode = Application.MODE_CREATE;
     }
 
     public Model() {
     }
 
-    public void init(List<Cliente> list){
-        this.list = list;
-        this.current = new Cliente();
-        this.filter = new Cliente();
-        this.mode= Application.MODE_CREATE;
+    public void init(List<Factura> fact, List<Linea> linea){
+        this.currentFactura =
     }
 
     public List<Cliente> getList() {
@@ -68,8 +71,11 @@ public class Model extends AbstractModel {
     }
 
 
-    public static final String LIST="list";
-    public static final String CURRENT="current";
-    public static final String FILTER="filter";
+    public static final String LISTAFACTURA="listFactura";
+    public static final String LISTLINEA ="listLinea";
+    public static final String CURRENTFACTURA="currentFactura";
+    public static final String CURRENTLINEA="currentLinea";
+    public static final String FILTERFACTURA="filterFactura";
+    public static final String FILTERLINEA="filterLinea";
 
 }

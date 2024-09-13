@@ -49,6 +49,7 @@ public class Controller {
         view.setController(this);
         view.setModel(model);
     }
+
     public void search(Linea filter) throws  Exception{
         model.setFilter(filter);
         model.setMode(Application.MODE_CREATE);
@@ -87,7 +88,6 @@ public class Controller {
             model.setCurrent(Service.instance().read(e));
         } catch (Exception ex) {}
     }
-
 
     public void delete() throws Exception {
         Service.instance().delete(model.getCurrent());

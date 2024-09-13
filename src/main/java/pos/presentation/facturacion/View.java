@@ -32,6 +32,7 @@ public class View implements PropertyChangeListener {
     private JTextField textField2;
     private JTextField textField3;
     private JTextField textField4;
+    private JScrollPane listaCompra;
 
     private XmlPersister xmlPersister;
 
@@ -210,7 +211,6 @@ public class View implements PropertyChangeListener {
                 list.setRowHeight(30);
                 TableColumnModel columnModel = list.getColumnModel();
                 columnModel.getColumn(1).setPreferredWidth(150);
-                columnModel.getColumn(3).setPreferredWidth(150);
                 break;
             case Model.CURRENT:
                 CajeroComboBox.setSelectedItem(model.getCajeros());  // Mostrar cajeros en el ComboBox

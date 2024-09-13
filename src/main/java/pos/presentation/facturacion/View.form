@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="pos.presentation.facturacion.View">
   <grid id="27dc6" binding="panel1" default-binding="true" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-    <margin top="0" left="0" bottom="0" right="0"/>
+    <margin top="10" left="10" bottom="10" right="10"/>
     <constraints>
       <xy x="20" y="20" width="933" height="400"/>
     </constraints>
     <properties/>
-    <border type="none"/>
+    <border type="none" title="Factura"/>
     <children>
       <grid id="a6eee" layout-manager="GridLayoutManager" row-count="6" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
@@ -131,72 +131,32 @@
               </component>
             </children>
           </grid>
-          <grid id="e9290" layout-manager="GridLayoutManager" row-count="1" column-count="7" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="5dec" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
-            <border type="bevel-raised" title="Funciones"/>
+            <border type="bevel-raised" title="Lista"/>
             <children>
-              <component id="c18dd" class="javax.swing.JButton" binding="cobrarButton" default-binding="true">
+              <scrollpane id="5aed7">
                 <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                    <minimum-size width="70" height="70"/>
+                    <preferred-size width="400" height="400"/>
+                  </grid>
                 </constraints>
-                <properties>
-                  <icon value="pos/presentation/icons/cobrar.png"/>
-                  <text value="Cobrar"/>
-                </properties>
-              </component>
-              <hspacer id="fff1b">
-                <constraints>
-                  <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </hspacer>
-              <component id="785dc" class="javax.swing.JButton" binding="buscarButton" default-binding="true">
-                <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <icon value="pos/presentation/icons/search.png"/>
-                  <text value="Buscar"/>
-                </properties>
-              </component>
-              <component id="2046c" class="javax.swing.JButton" binding="cantidadButton" default-binding="true">
-                <constraints>
-                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Cantidad"/>
-                </properties>
-              </component>
-              <component id="6c2d7" class="javax.swing.JButton" binding="quitarButton" default-binding="true">
-                <constraints>
-                  <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <icon value="pos/presentation/icons/delete.png"/>
-                  <text value="Quitar"/>
-                </properties>
-              </component>
-              <component id="9bf2" class="javax.swing.JButton" binding="descuentoButton" default-binding="true">
-                <constraints>
-                  <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <icon value="pos/presentation/icons/descuento.png"/>
-                  <text value="Descuento"/>
-                </properties>
-              </component>
-              <component id="c4a86" class="javax.swing.JButton" binding="cancelarButton" default-binding="true">
-                <constraints>
-                  <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <icon value="pos/presentation/icons/cancelar.png"/>
-                  <text value="Cancelar"/>
-                </properties>
-              </component>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="feaa6" class="javax.swing.JTable" binding="list">
+                    <constraints/>
+                    <properties>
+                      <minimumSize width="80" height="80"/>
+                    </properties>
+                  </component>
+                </children>
+              </scrollpane>
             </children>
           </grid>
           <grid id="d7f6a" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -313,32 +273,72 @@
               </grid>
             </children>
           </grid>
-          <grid id="5dec" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+          <grid id="e9290" layout-manager="GridLayoutManager" row-count="1" column-count="7" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
-            <border type="bevel-raised" title="Lista"/>
+            <border type="bevel-raised" title="Funciones"/>
             <children>
-              <scrollpane id="5aed7">
+              <component id="c18dd" class="javax.swing.JButton" binding="cobrarButton" default-binding="true">
                 <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false">
-                    <minimum-size width="70" height="70"/>
-                    <preferred-size width="400" height="400"/>
-                  </grid>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
-                <properties/>
-                <border type="none"/>
-                <children>
-                  <component id="feaa6" class="javax.swing.JTable" binding="list">
-                    <constraints/>
-                    <properties>
-                      <minimumSize width="80" height="80"/>
-                    </properties>
-                  </component>
-                </children>
-              </scrollpane>
+                <properties>
+                  <icon value="pos/presentation/icons/cobrar.png"/>
+                  <text value="Cobrar"/>
+                </properties>
+              </component>
+              <hspacer id="fff1b">
+                <constraints>
+                  <grid row="0" column="6" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+              </hspacer>
+              <component id="785dc" class="javax.swing.JButton" binding="buscarButton" default-binding="true">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <icon value="pos/presentation/icons/search.png"/>
+                  <text value="Buscar"/>
+                </properties>
+              </component>
+              <component id="2046c" class="javax.swing.JButton" binding="cantidadButton" default-binding="true">
+                <constraints>
+                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Cantidad"/>
+                </properties>
+              </component>
+              <component id="6c2d7" class="javax.swing.JButton" binding="quitarButton" default-binding="true">
+                <constraints>
+                  <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <icon value="pos/presentation/icons/delete.png"/>
+                  <text value="Quitar"/>
+                </properties>
+              </component>
+              <component id="9bf2" class="javax.swing.JButton" binding="descuentoButton" default-binding="true">
+                <constraints>
+                  <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <icon value="pos/presentation/icons/descuento.png"/>
+                  <text value="Descuento"/>
+                </properties>
+              </component>
+              <component id="c4a86" class="javax.swing.JButton" binding="cancelarButton" default-binding="true">
+                <constraints>
+                  <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <icon value="pos/presentation/icons/cancelar.png"/>
+                  <text value="Cancelar"/>
+                </properties>
+              </component>
             </children>
           </grid>
         </children>
