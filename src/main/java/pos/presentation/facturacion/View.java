@@ -91,15 +91,20 @@ public class View implements PropertyChangeListener {
         });
         buscarButton.addActionListener(new ActionListener() {
             @Override
+
             public void actionPerformed(ActionEvent e) {
+                Linea lineaTemp = new Linea();
                 if(buscarView!=null){
                     buscarView.setVisible(true);
                 }
                 else{
-                    buscarView = new buscarVIew();
+                    buscarView = new buscarVIew(lineaTemp);
+                    buscarView.setSize(600, 400);  // Establecer tamaño si es necesario
+                    buscarView.setLocationRelativeTo(null);  // Centrar la ventana
                     buscarView.setVisible(true);
-
                 }
+                // Crear una linea temporalm para setear el producto y agregarla a la factura
+
                 //Abrir una ventana con todos los productos
 
                 //buscar por descrip
@@ -190,7 +195,7 @@ public class View implements PropertyChangeListener {
                 JOptionPane.showMessageDialog(null, "El código del producto no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
                 valid=false;
             }
-            Producto existeEnInventario = null;
+            Producto existeEnInventario = null; //Revisar
             for (Producto producto : Service.instance().getProductos()) {
                 if (producto.getCodigo().equals(codProducto)) {
                     existeEnInventario = producto;
