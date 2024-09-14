@@ -100,8 +100,12 @@ public class Controller {
     }
     public void actualizarComboBox(){
         try {
-            List<Cajero> cajeros = XmlPersister.instance().load().getCajeros();
-            List<Cliente> clientes = XmlPersister.instance().load().getClientes();
+            // Obtener las listas actualizadas del servicio
+            Service service = Service.instance();
+
+            List<Cajero> cajeros = service.getCajeros(); // Obtener la lista de cajeros desde el servicio
+            List<Cliente> clientes = service.getClientes(); // Obtener la lista de clientes desde el servicio
+
             if (cajeros != null && clientes != null) {
                 // Actualizar el modelo con los nuevos datos
                 model.setCajeros(cajeros);

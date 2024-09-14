@@ -32,7 +32,7 @@ public class Model extends AbstractModel {
     }
 
     public void init(List<Factura> fact, List<Linea> linea){
-        this.currentFactura =
+       // this.currentFactura =
     }
 
     public List<Cliente> getList() {
