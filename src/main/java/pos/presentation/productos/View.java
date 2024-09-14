@@ -242,12 +242,13 @@ public class View implements PropertyChangeListener {
                 break;
             case Model.CATEGORIAS:
                 categoriaComboBox1.setModel(new DefaultComboBoxModel<>(model.getCategorias().toArray(new Categoria[0])));
-
                 break;
 
             case Model.FILTER:
                 CodigoTxtfield.setText(model.getFilter().getCodigo());
                 break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + evt.getPropertyName());
         }
 
         this.panel.revalidate();

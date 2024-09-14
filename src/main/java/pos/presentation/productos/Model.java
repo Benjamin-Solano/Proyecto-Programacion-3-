@@ -38,7 +38,6 @@ public class Model extends AbstractModel {
         this.categorias = categorias; // Cargar las categorías
         this.mode = Application.MODE_CREATE;
         firePropertyChange(LIST);
-        this.mode= Application.MODE_CREATE;
     }
 
     public List<Producto> getList() {

@@ -21,10 +21,13 @@ public class Model extends AbstractModel {
     @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         super.addPropertyChangeListener(listener);
-        firePropertyChange(LIST);
-        firePropertyChange(CURRENT);
-        firePropertyChange(FILTER);
+        firePropertyChange(LISTAFACTURA);
+        firePropertyChange(CURRENTFACTURA);
+        firePropertyChange(FILTERFACTURA);
 
+        firePropertyChange(LISTLINEA);
+        firePropertyChange(CURRENTLINEA);
+        firePropertyChange(FILTERLINEA);
         this.mode = Application.MODE_CREATE;
     }
 
@@ -32,35 +35,69 @@ public class Model extends AbstractModel {
     }
 
     public void init(List<Factura> fact, List<Linea> linea){
-        this.currentFactura =
+        this.currentFactura = new Factura();
+        this.currentLinea = new Linea();
+        this.listFacturas = fact;
+        this.listLineas = linea;
+        this.filterFactura = new Factura();
+        this.filterLinea = new Linea();
+        this.mode= Application.MODE_CREATE;
+        firePropertyChange(LISTLINEA);
+        firePropertyChange(LISTAFACTURA);
     }
 
-    public List<Cliente> getList() {
-        return list;
+    public List<Factura> getListFacturas() {
+        return listFacturas;
     }
 
-    public void setList(List<Cliente> list){
-        this.list = list;
-        firePropertyChange(LIST);
+    public void setListFacturas(List<Factura> list){
+        this.listFacturas = list;
+        firePropertyChange(LISTAFACTURA);
     }
 
-    public Cliente getCurrent() {
-        return current;
+    public List<Linea> getListLineas() {
+        return listLineas;
     }
 
-    public void setCurrent(Cliente current) {
-        this.current = current;
-        firePropertyChange(CURRENT);
+    public void setListLineas(List<Factura> list){
+        this.listFacturas = list;
+        firePropertyChange(LISTLINEA);
     }
 
-    public Cliente getFilter() {
-        return filter;
+    public Linea getCurrentLinea() {
+        return currentLinea;
+    }
+    //--
+    public Factura getCurrentFactura() { return currentFactura; }
+
+    public void setCurrentFactura(Factura current) {
+        this.currentFactura = current;
+        firePropertyChange(CURRENTFACTURA);
     }
 
-    public void setFilter(Cliente filter) {
-        this.filter = filter;
-        firePropertyChange(FILTER);
+    public Factura getFilterFactura() {
+        return filterFactura;
     }
+
+    public void setFilterFactura(Factura filter) {
+        this.filterFactura = filter;
+        firePropertyChange(FILTERFACTURA);
+    }
+    //--
+    public void setCurrentLinea(Linea current) {
+        this.currentLinea = current;
+        firePropertyChange(CURRENTLINEA);
+    }
+
+    public Linea getFilterLinea() {
+        return filterLinea;
+    }
+
+    public void setFilterLinea(Linea filter) {
+        this.filterLinea = filter;
+        firePropertyChange(FILTERLINEA);
+    }
+
 
     public int getMode() {
         return mode;

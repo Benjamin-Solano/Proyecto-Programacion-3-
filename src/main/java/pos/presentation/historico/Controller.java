@@ -18,8 +18,6 @@ import pos.Application;
 import pos.data.XmlPersister;
 import pos.logic.*;
 
-import java.awt.*;
-import java.io.File;
 import java.util.List;
 
 public class Controller {
@@ -35,7 +33,9 @@ public class Controller {
                 model.init(facturas, lineas);
                 // Si la lista de productos no está vacía, establecer el primero como actual
                 if (!facturas.isEmpty()) {
-                    model.setCurrent(facturas.get(0));
+                    model.setCurrentFactura(facturas.get(0));
+                }if(!lineas.isEmpty()){
+                    model.setCurrentLinea(lineas.get(0));
                 }
             } else {
                 System.out.println("Error: Productos o Categorías son nulos.");
@@ -50,11 +50,11 @@ public class Controller {
         view.setModel(model);
     }
 
-    public void search(Cliente filter) throws Exception {
-        model.setFilter(filter);
+    public void search(Factura filter) throws Exception {
+        model.setFilterFactura(filter);
         model.setMode(Application.MODE_CREATE);
-        model.setCurrent(new Cliente());
-        model.setList(Service.instance().search(model.getFilter()));
+        model.setFilterFactura(new Factura());
+        model.setListFacturas(Service.instance().search(model.getFilterFactura()));
     }
 
     public void init() {
@@ -66,17 +66,23 @@ public class Controller {
             e.printStackTrace();
         }
     }
-
-    public void edit(int row) {
-        Cliente e = model.getList().get(row);
+    public void editFacturas(int row){
+        Factura e = model.getListFacturas().get(row);
         try {
             model.setMode(Application.MODE_EDIT);
-            model.setCurrent(Service.instance().read(e));
-        } catch (Exception ex) {
-        }
+            model.setCurrentFactura(Service.instance().read(e));
+        } catch (Exception ex) {}
     }
+    public void editLineas(int row){
+        Linea e = model.getListLineas().get(row);
+        try {
+            model.setMode(Application.MODE_EDIT);
+            model.setCurrentLinea(Service.instance().read(e));
+        } catch (Exception ex) {}
+    }
+
     public void print()throws Exception{
-        String dest="clientes.pdf";
+        String dest="historico.pdf";
         PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA);
         PdfWriter writer = new PdfWriter(dest);
         PdfDocument pdf = new PdfDocument(writer);
@@ -88,7 +94,7 @@ public class Controller {
         Table header = new Table(1);
         header.setWidth(400);
         header.setHorizontalAlignment(HorizontalAlignment.CENTER);
-        header.addCell(getCell(new Paragraph("Listado de Clientes").setFont(font).setBold().setFontSize(20f), TextAlignment.CENTER,false));
+        header.addCell(getCell(new Paragraph("Historico").setFont(font).setBold().setFontSize(20f), false));
         //header.addCell(getCell(new Image(ImageDataFactory.create("logo.jpg")), HorizontalAlignment.CENTER,false));
         document.add(header);
 
@@ -96,29 +102,35 @@ public class Controller {
 
         com.itextpdf.kernel.colors.Color bkg = ColorConstants.RED;
         Color frg= ColorConstants.WHITE;
-        Table body = new Table(4);
+        Table body = new Table(7);
         body.setWidth(400);
         body.setHorizontalAlignment(HorizontalAlignment.CENTER);
-        body.addCell(getCell(new Paragraph("Id").setBackgroundColor(bkg).setFontColor(frg),TextAlignment.CENTER,true));
-        body.addCell(getCell(new Paragraph("Nombre").setBackgroundColor(bkg).setFontColor(frg),TextAlignment.CENTER,true));
-        body.addCell(getCell(new Paragraph("Email").setBackgroundColor(bkg).setFontColor(frg),TextAlignment.CENTER,true));
-        body.addCell(getCell(new Paragraph("Telefono").setBackgroundColor(bkg).setFontColor(frg),TextAlignment.CENTER,true));
+        body.addCell(getCell(new Paragraph("Factura").setBackgroundColor(bkg).setFontColor(frg), true));
+        body.addCell(getCell(new Paragraph("Producto").setBackgroundColor(bkg).setFontColor(frg), true));
 
 
-        for(Cliente e: model.getList()){
-            body.addCell(getCell(new Paragraph(e.getId()), TextAlignment.CENTER,true));
-            body.addCell(getCell(new Paragraph(e.getNombre()),TextAlignment.CENTER,true));
-            body.addCell(getCell(new Paragraph(e.getEmail()),TextAlignment.CENTER,true));
-            body.addCell(getCell(new Paragraph(e.getTelefono()),TextAlignment.CENTER,true));
+        for(Factura e: model.getListFacturas()){
+            body.addCell(getCell(new Paragraph(e.getNumero()), true));
+            body.addCell(getCell(new Paragraph(String.valueOf(e.getCajero().getId())), true));
+            body.addCell(getCell(new Paragraph(String.valueOf(e.getFecha().getMonth())), true));
+
         }
+        for(Linea e:model.getListLineas()){
+            body.addCell(getCell(new Paragraph(e.getProducto().getCodigo()), true));
+            body.addCell(getCell(new Paragraph(e.getProducto().getDescripcion()), true));
+            body.addCell(getCell(new Paragraph(e.getProducto().getCategoria().getNombre()), true));
+            body.addCell(getCell(new Paragraph(e.getProducto().getUnidadDeMedida()), true));
+            body.addCell(getCell(new Paragraph(String.valueOf(e.getProducto().getPrecioUnitario())), true));
+        }
+
         document.add(body);
         document.close();
     }
 
-    private Cell getCell(Paragraph paragraph, TextAlignment alignment, boolean hasBorder) {
+    private Cell getCell(Paragraph paragraph, boolean hasBorder) {
         Cell cell = new Cell().add(paragraph);
         cell.setPadding(0);
-        cell.setTextAlignment(alignment);
+        cell.setTextAlignment(TextAlignment.CENTER);
         if(!hasBorder) cell.setBorder(Border.NO_BORDER);
         return cell;
     }

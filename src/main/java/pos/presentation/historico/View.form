@@ -77,7 +77,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="cbb3c" class="javax.swing.JTable" binding="list">
+              <component id="cbb3c" class="javax.swing.JTable" binding="listFacturas">
                 <constraints/>
                 <properties/>
               </component>
@@ -100,7 +100,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="b11e4" class="javax.swing.JTable" binding="table1" default-binding="true">
+              <component id="b11e4" class="javax.swing.JTable" binding="listLineas">
                 <constraints/>
                 <properties/>
               </component>
