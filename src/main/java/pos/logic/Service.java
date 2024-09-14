@@ -229,8 +229,8 @@ public class Service { //esto es un singleton
 
     //================= Facturas ============
 
-
-
+//Esto es para el el num
+    public int contadorFacturas=1;
 
 
 

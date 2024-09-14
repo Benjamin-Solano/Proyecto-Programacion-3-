@@ -118,4 +118,11 @@ public class Controller {
             System.out.println("Error al actualizar los datos de los ComboBox: " + e.getMessage());
         }
     }
+    public String generadorNumFactura(){
+        Service service = Service.instance();
+        int contadorFacturas= service.contadorFacturas;
+        String numeroFactura = "FAC-" + String.format("%04d", contadorFacturas);
+        contadorFacturas++;
+        return numeroFactura;
+    }
 }
