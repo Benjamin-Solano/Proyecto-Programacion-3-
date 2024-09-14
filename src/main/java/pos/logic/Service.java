@@ -221,5 +221,12 @@ public class Service { //esto es un singleton
     public List<Linea> getLineas() {
         return data.getLineas();  // Retorna la lista completa de Lineas
     }
+
+        //================= Facturas ============
+
+    //Para los num de Factura
+    public int contadorFacturas = 1; // Iniciamos en 1
 }
+
+
 

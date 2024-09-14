@@ -88,7 +88,6 @@ public class Controller {
         } catch (Exception ex) {}
     }
 
-
     public void delete() throws Exception {
         Service.instance().delete(model.getCurrent());
         search(model.getFilter());
@@ -97,5 +96,13 @@ public class Controller {
     public void clear() {
         model.setMode(Application.MODE_CREATE);
         model.setCurrent(new Linea());
+    }
+
+    public String generadorNumFactura(){
+        Service service = Service.instance();
+        int contadorFacturas= service.contadorFacturas;
+                String numeroFactura = "FAC-" + String.format("%04d", contadorFacturas);
+        contadorFacturas++;
+        return numeroFactura;
     }
 }

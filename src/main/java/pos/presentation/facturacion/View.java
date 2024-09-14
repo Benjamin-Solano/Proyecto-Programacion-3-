@@ -13,6 +13,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class View implements PropertyChangeListener {
     private JPanel panel1;
@@ -32,6 +34,7 @@ public class View implements PropertyChangeListener {
     private JTextField textField2;
     private JTextField textField3;
     private JTextField textField4;
+    private buscarVIew  buscarView; //Primer sub panelLista de productos
 
     private XmlPersister xmlPersister;
 
@@ -89,13 +92,19 @@ public class View implements PropertyChangeListener {
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //Abrir una ventana con todos los productos
+                if(buscarView!=null){
+                    buscarView.setVisible(true);
+                }
+                else{
+                    buscarView = new buscarVIew();
+                    buscarView.setVisible(true);
 
+                }
+                //Abrir una ventana con todos los productos
 
                 //buscar por descrip
 
                 //reflejar codigo en campoText de producto
-
 
             }
         });
@@ -176,18 +185,73 @@ public class View implements PropertyChangeListener {
 
     private boolean validate() {
         boolean valid = true;
-        // las condiciones para las entradas de datos
+            String codProducto = codigoProductoTxtfield.getText();
+            if (codProducto == null || codProducto.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "El código del producto no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
+                valid=false;
+            }
+            Producto existeEnInventario = null;
+            for (Producto producto : Service.instance().getProductos()) {
+                if (producto.getCodigo().equals(codProducto)) {
+                    existeEnInventario = producto;
+                    break;
+                }
+            }
+            if (existeEnInventario == null) {
+                JOptionPane.showMessageDialog(null, "El producto no existe en el inventario", "Error", JOptionPane.ERROR_MESSAGE);
+                valid=false;
+            }
+            // se ha seleccionado una fila
+            int filaSeleccionada = list.getSelectedRow();
+            if (filaSeleccionada == -1) {
+                JOptionPane.showMessageDialog(null, "Debes seleccionar un producto de la lista", "Error", JOptionPane.ERROR_MESSAGE);
+                valid=false;
+            }
+            // cantidad ingresada
+            String cantidadStr = JOptionPane.showInputDialog(null, "Ingresa la cantidad del producto:", "Cantidad", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                int cantidad = Integer.parseInt(cantidadStr);
+                if (cantidad <= 0 || cantidad > existeEnInventario.getExistencias()) {
+                    JOptionPane.showMessageDialog(null, "Cantidad inválida. Debe ser un número positivo y no superar el stock disponible", "Error", JOptionPane.ERROR_MESSAGE);
+                    valid=false;
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "La cantidad debe ser un número entero válido", "Error", JOptionPane.ERROR_MESSAGE);
+                valid=false;
+            }
 
-        //hay unas que las tengo en los botones, hay que pasarlas
-
+            // hay algún descuento y si es un número válido
+            String descuentoStr = JOptionPane.showInputDialog(null, "Ingresa el descuento:", "Descuento", JOptionPane.INFORMATION_MESSAGE);
+            try {
+                int descuento = Integer.parseInt(descuentoStr);
+                if (descuento < 0 || descuento > existeEnInventario.getPrecioUnitario()) {
+                    JOptionPane.showMessageDialog(null, "El descuento no puede ser mayor al precio del producto", "Error", JOptionPane.ERROR_MESSAGE);
+                    valid=false;
+                }
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "El descuento debe ser un número entero válido", "Error", JOptionPane.ERROR_MESSAGE);
+                valid=false;
+            }
+            valid=true;; // Si todas las validaciones se pasan
         return valid;
     }
 
-    public Linea take() {
-    Linea e = new Linea();
-//cambios con setters
+    public Factura take() {
+        TableModel mod= (TableModel) list.getModel();
+        Factura e = new Factura();
+             e.setNumero(controller.generadorNumFactura());
+             e.setCliente((Cliente)ClienteComboBox.getSelectedItem());
+             e.setCajero((Cajero)CajeroComboBox.getSelectedItem());
+            List<Linea> lineas = new ArrayList<>();
+            for (int i = 0; i < mod.getRowCount(); i++) {
+                Linea linea = (Linea) model.getList().get(i);
+                lineas.add(linea);
+            }
+            e.setLineas(lineas);
+            //e.setFecha( );
     return e;
     }
+
 
     // MVC
      Model model;
