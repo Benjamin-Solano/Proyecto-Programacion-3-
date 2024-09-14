@@ -23,8 +23,6 @@ public class Model extends AbstractModel {
         firePropertyChange(LIST);
         firePropertyChange(CURRENT);
         firePropertyChange(FILTER);
-        this.categorias = categorias; // Cargar las categorías
-        this.mode = Application.MODE_CREATE;
         firePropertyChange(CATEGORIAS);
     }
 
@@ -36,7 +34,6 @@ public class Model extends AbstractModel {
         this.current = new Producto();
         this.filter = new Producto();
         this.categorias = categorias; // Cargar las categorías
-        this.mode = Application.MODE_CREATE;
         firePropertyChange(LIST);
     }
 

@@ -70,6 +70,9 @@ public class Service { //esto es un singleton
                 .collect(Collectors.toList());
     }
 
+    public List <Cliente> getClientes(){
+        return data.getClientes();
+    }
     //================= Cajeros ============
     public void create(Cajero e) throws Exception {
 
@@ -105,7 +108,9 @@ public class Service { //esto es un singleton
                 .sorted(Comparator.comparing(Cajero::getNombre))
                 .collect(Collectors.toList());
     }
-
+    public List<Cajero> getCajeros(){
+        return data.getCajeros();
+    }
     //================= Productos ============
     public void create(Producto e) throws Exception {
 
@@ -261,8 +266,8 @@ public class Service { //esto es un singleton
         return data.getFacturas();  // Retorna la lista completa de Facturas
     }
 
-
-
+//Esto es para el el num
+    public int contadorFacturas=1;
 
 
 
