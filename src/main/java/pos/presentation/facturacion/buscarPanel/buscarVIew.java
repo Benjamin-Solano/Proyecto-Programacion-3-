@@ -1,7 +1,8 @@
-package pos.presentation.facturacion;
+package pos.presentation.facturacion.buscarPanel;
 
 import pos.logic.Producto;
 import pos.logic.Service;
+
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
@@ -21,6 +22,7 @@ public class buscarVIew extends javax.swing.JDialog implements PropertyChangeLis
     private JTable listSubPanel;
     private JLabel DescripciónLbl;
     private Producto productoSeleccionado;
+    private Service service= Service.instance();
     //MVC
     private buscarController busController;
     private buscarModel busModel;
@@ -53,6 +55,7 @@ public class buscarVIew extends javax.swing.JDialog implements PropertyChangeLis
                 if (row >= 0) {
                    productoSeleccionado = ((buscarTableModel) listSubPanel.getModel()).getRowAt(row);
                     busController.edit(row);
+                    setProductoSeleccionado(productoSeleccionado);
                 }
             }
         }
@@ -78,9 +81,11 @@ public class buscarVIew extends javax.swing.JDialog implements PropertyChangeLis
         }
         },  javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0),  javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
-
+    public void setProductoSeleccionado(Producto productoSeleccionado){
+        this.productoSeleccionado = productoSeleccionado;
+    }
     public Producto getProductoSeleccionado() {
-        return productoSeleccionado;
+        return this.productoSeleccionado;
     }
     public void setController(buscarController buscarController) {
         this.busController = buscarController;

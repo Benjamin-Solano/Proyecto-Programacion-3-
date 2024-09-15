@@ -118,7 +118,7 @@ public class Controller {
 
     public void actualizarCantidad(Linea nuevaLinea) {
         for (Linea linea : service.getLineas()) {
-            if (linea.getProducto().equals(nuevaLinea.getProducto())) {
+            if (linea.getProducto().getCodigo().equals(nuevaLinea.getProducto().getCodigo())) {
                 linea.setCantidad(linea.getCantidad() + nuevaLinea.getCantidad());
                 break;
             }

@@ -1,24 +1,15 @@
-package pos.presentation.facturacion;
-
-import pos.Application;
-import pos.logic.Categoria;
-import pos.logic.Producto;
-import pos.presentation.AbstractModel;
-
-import java.beans.PropertyChangeListener;
-import java.util.List;
+package pos.presentation.facturacion.buscarPanel;
 
 import pos.Application;
 import pos.logic.Producto;
-import pos.logic.Categoria;
-
-import pos.presentation.AbstractModel;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.List;
 import pos.logic.Service;
+import pos.presentation.AbstractModel;
 
-    public class buscarModel extends AbstractModel {
+import javax.swing.*;
+import java.beans.PropertyChangeListener;
+import java.util.List;
+
+public class buscarModel extends AbstractModel {
         Producto filter;
         List<Producto> list;
         Producto current;

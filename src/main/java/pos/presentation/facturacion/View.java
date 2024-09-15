@@ -3,8 +3,10 @@ package pos.presentation.facturacion;
 import pos.Application;
 import pos.data.XmlPersister;
 import pos.logic.*;
-
-
+//El panel buscar
+import pos.presentation.facturacion.buscarPanel.buscarController;
+import pos.presentation.facturacion.buscarPanel.buscarModel;
+import pos.presentation.facturacion.buscarPanel.buscarVIew;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.event.ActionEvent;
@@ -35,8 +37,8 @@ public class View implements PropertyChangeListener {
     private JTextField textField3;
     private JTextField textField4;
     private buscarVIew buscarView; //Primer sub panelLista de productos
-    private buscarController buscarController;
-    private buscarModel  buscarModel;
+    private pos.presentation.facturacion.buscarPanel.buscarController buscarController;
+    private pos.presentation.facturacion.buscarPanel.buscarModel buscarModel;
 
     private XmlPersister xmlPersister;
 
@@ -230,9 +232,8 @@ public class View implements PropertyChangeListener {
             buscarView.setLocationRelativeTo(null);
         }
         buscarView.setVisible(true);
-
-        if (buscarView.getProductoSeleccionado() != null) {
-            prod = buscarView.getProductoSeleccionado();
+        prod = buscarView.getProductoSeleccionado();
+        if (prod != null) {
             Linea nuevaLinea = new Linea();
             nuevaLinea.setProducto(prod);
             nuevaLinea.setCantidad(1); // Cantidad inicial

@@ -1,18 +1,18 @@
-package pos.presentation.facturacion;
+package pos.presentation.facturacion.buscarPanel;
 
 import pos.Application;
-import pos.data.XmlPersister;
 import pos.logic.Producto;
 import pos.logic.Service;
 
 
+import javax.swing.*;
 import java.util.List;
 
 public class buscarController {
 
     buscarVIew view;
     buscarModel model;
-
+    Service service = Service.instance();
     public buscarController(buscarVIew view, buscarModel model) {
         try{
 
@@ -85,7 +85,6 @@ public class buscarController {
     }
     public void actualizarLista(){
         try {
-            Service service = Service.instance();
             List<Producto> product = service.getProductos();
             if (product != null) {
                 // Actualizar el modelo con los nuevos datos
@@ -99,5 +98,7 @@ public class buscarController {
             System.out.println("Error al actualizar los datos de los ComboBox: " + e.getMessage());
         }
     }
+
+
 
 }

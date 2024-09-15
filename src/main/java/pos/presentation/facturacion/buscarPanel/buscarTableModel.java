@@ -1,4 +1,4 @@
-package pos.presentation.facturacion;
+package pos.presentation.facturacion.buscarPanel;
 
 import pos.logic.Producto;
 import pos.presentation.AbstractTableModel;
