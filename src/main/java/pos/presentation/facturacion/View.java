@@ -181,7 +181,6 @@ public class View implements PropertyChangeListener {
                 controller.actualizarComboBox();
             }
         });
-
     }
 
     private boolean validate() {

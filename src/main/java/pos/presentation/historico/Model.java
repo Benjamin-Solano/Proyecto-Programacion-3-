@@ -32,6 +32,8 @@ public class Model extends AbstractModel {
     }
 
     public Model() {
+        this.listFacturas = new ArrayList<>();
+        this.listLineas = new ArrayList<>();
     }
 
     public void init(List<Factura> fact, List<Linea> linea){
@@ -41,7 +43,7 @@ public class Model extends AbstractModel {
         this.listLineas = linea;
         this.filterFactura = new Factura();
         this.filterLinea = new Linea();
-        this.mode= Application.MODE_CREATE;
+        this.mode = Application.MODE_CREATE;
         firePropertyChange(LISTLINEA);
         firePropertyChange(LISTAFACTURA);
     }
@@ -59,16 +61,18 @@ public class Model extends AbstractModel {
         return listLineas;
     }
 
-    public void setListLineas(List<Factura> list){
-        this.listFacturas = list;
+    public void setListLineas(List<Linea> list){
+        this.listLineas = list;
         firePropertyChange(LISTLINEA);
     }
 
     public Linea getCurrentLinea() {
         return currentLinea;
     }
-    //--
-    public Factura getCurrentFactura() { return currentFactura; }
+
+    public Factura getCurrentFactura() {
+        return currentFactura;
+    }
 
     public void setCurrentFactura(Factura current) {
         this.currentFactura = current;
@@ -83,7 +87,7 @@ public class Model extends AbstractModel {
         this.filterFactura = filter;
         firePropertyChange(FILTERFACTURA);
     }
-    //--
+
     public void setCurrentLinea(Linea current) {
         this.currentLinea = current;
         firePropertyChange(CURRENTLINEA);
@@ -98,7 +102,6 @@ public class Model extends AbstractModel {
         firePropertyChange(FILTERLINEA);
     }
 
-
     public int getMode() {
         return mode;
     }
@@ -107,12 +110,10 @@ public class Model extends AbstractModel {
         this.mode = mode;
     }
 
-
-    public static final String LISTAFACTURA="listFactura";
-    public static final String LISTLINEA ="listLinea";
-    public static final String CURRENTFACTURA="currentFactura";
-    public static final String CURRENTLINEA="currentLinea";
-    public static final String FILTERFACTURA="filterFactura";
-    public static final String FILTERLINEA="filterLinea";
-
+    public static final String LISTAFACTURA = "listFactura";
+    public static final String LISTLINEA = "listLinea";
+    public static final String CURRENTFACTURA = "currentFactura";
+    public static final String CURRENTLINEA = "currentLinea";
+    public static final String FILTERFACTURA = "filterFactura";
+    public static final String FILTERLINEA = "filterLinea";
 }
