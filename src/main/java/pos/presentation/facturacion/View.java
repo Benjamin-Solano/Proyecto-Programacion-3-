@@ -34,7 +34,9 @@ public class View implements PropertyChangeListener {
     private JTextField textField2;
     private JTextField textField3;
     private JTextField textField4;
-    private buscarVIew  buscarView; //Primer sub panelLista de productos
+    private buscarVIew buscarView; //Primer sub panelLista de productos
+    private buscarController buscarController;
+    private buscarModel  buscarModel;
 
     private XmlPersister xmlPersister;
 
@@ -77,42 +79,16 @@ public class View implements PropertyChangeListener {
         cobrarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-            Double total = 0.0;
-                for(Linea temp: Service.instance().getLineas()){ //revisar, tiempo de compilación
-                 total+= (temp.getProducto().getPrecioUnitario()-temp.getDescuento());
-                }
-                //delpliegue de sub-panel
-
-
-                //según metodos de pago
-
+            cobrarFactura();
             }
         });
         buscarButton.addActionListener(new ActionListener() {
             @Override
-
             public void actionPerformed(ActionEvent e) {
-                Linea lineaTemp = new Linea();
-                if(buscarView!=null){
-                    buscarView.setVisible(true);
-                }
-                else{
-                    buscarView = new buscarVIew(lineaTemp);
-                    buscarView.setSize(600, 400);  // Establecer tamaño si es necesario
-                    buscarView.setLocationRelativeTo(null);  // Centrar la ventana
-                    buscarView.setVisible(true);
-                }
-                // Crear una linea temporalm para setear el producto y agregarla a la factura
-
-                //Abrir una ventana con todos los productos
-
-                //buscar por descrip
-
-                //reflejar codigo en campoText de producto
-
+               abrirVentanaBusqueda();
             }
         });
+
         cantidadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -239,6 +215,48 @@ public class View implements PropertyChangeListener {
             }
             valid=true;; // Si todas las validaciones se pasan
         return valid;
+    }
+
+
+    private void abrirVentanaBusqueda() {
+        Producto prod= null; //Temporal
+        if (buscarView == null && buscarModel==null) {
+            buscarView = new buscarVIew();
+            buscarModel = new buscarModel();
+            buscarController= new buscarController(buscarView, buscarModel);
+            buscarView.setController(buscarController);
+            buscarView.setModel(buscarModel);
+            buscarView.setSize(600, 400);
+            buscarView.setLocationRelativeTo(null);
+        }
+        buscarView.setVisible(true);
+
+        if(buscarView.getProductoSeleccionado()!=null) {
+            prod = buscarView.getProductoSeleccionado();
+            Linea nuevaLinea = new Linea();
+            nuevaLinea.setProducto(prod);
+            nuevaLinea.setCantidad(1);
+            nuevaLinea.setDescuento(0);
+            try {
+                controller.save(nuevaLinea);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+     else {
+        JOptionPane.showMessageDialog(null, "No se ha seleccionado ningún producto.", "Información", JOptionPane.INFORMATION_MESSAGE);
+    }
+    }
+    private void cobrarFactura(){
+        //Haceer metodo void aparte
+        Double total = 0.0;
+        for(Linea temp: Service.instance().getLineas()){ //revisar, tiempo de compilación
+            total+= (temp.getProducto().getPrecioUnitario()-temp.getDescuento());
+        }
+        //delpliegue de sub-panel
+
+
+        //según metodos de pago
     }
 
     public Factura take() {

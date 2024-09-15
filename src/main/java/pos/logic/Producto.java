@@ -45,7 +45,7 @@ public class Producto {
         return precioUnitario;
     }
 
-    public float getExistencias() {
+    public int getExistencias() {
         return existencias;
     }
 

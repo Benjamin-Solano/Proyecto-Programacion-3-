@@ -16,7 +16,7 @@
           </grid>
         </constraints>
         <properties/>
-        <border type="none" title="Factura"/>
+        <border type="none" title=""/>
         <children>
           <vspacer id="7e799">
             <constraints>
