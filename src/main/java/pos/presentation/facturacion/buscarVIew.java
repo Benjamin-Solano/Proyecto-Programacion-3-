@@ -5,6 +5,8 @@ import pos.logic.Service;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
@@ -55,6 +57,12 @@ public class buscarVIew extends javax.swing.JDialog implements PropertyChangeLis
             }
         }
     });
+    contentPane.addComponentListener(new ComponentAdapter() {
+        public void componentShown(ComponentEvent e) {
+            busController.actualizarLista();
+            }
+        });
+
 
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     addWindowListener(new java.awt.event.WindowAdapter() {

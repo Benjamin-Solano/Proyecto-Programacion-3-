@@ -219,11 +219,11 @@ public class View implements PropertyChangeListener {
 
 
     private void abrirVentanaBusqueda() {
-        Producto prod= null; //Temporal
-        if (buscarView == null && buscarModel==null) {
+        Producto prod = null; // Temporal
+        if (buscarView == null && buscarModel == null) {
             buscarView = new buscarVIew();
             buscarModel = new buscarModel();
-            buscarController= new buscarController(buscarView, buscarModel);
+            buscarController = new buscarController(buscarView, buscarModel);
             buscarView.setController(buscarController);
             buscarView.setModel(buscarModel);
             buscarView.setSize(600, 400);
@@ -231,22 +231,29 @@ public class View implements PropertyChangeListener {
         }
         buscarView.setVisible(true);
 
-        if(buscarView.getProductoSeleccionado()!=null) {
+        if (buscarView.getProductoSeleccionado() != null) {
             prod = buscarView.getProductoSeleccionado();
             Linea nuevaLinea = new Linea();
             nuevaLinea.setProducto(prod);
-            nuevaLinea.setCantidad(1);
+            nuevaLinea.setCantidad(1); // Cantidad inicial
             nuevaLinea.setDescuento(0);
+            nuevaLinea.setNumero(model.getCurrent().getNumero()+1);
             try {
-                controller.save(nuevaLinea);
+                if (!controller.existeLinea(nuevaLinea)) {
+                    controller.save(nuevaLinea);
+                } else {
+                    JOptionPane.showMessageDialog(null, "La línea ya existe. Actualizando cantidad.");
+                    controller.actualizarCantidad(nuevaLinea);  // Método para actualizar la cantidad si ya existe
+                }
             } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Error al guardar la línea: " + e.getMessage());
                 throw new RuntimeException(e);
             }
+        } else {
+            JOptionPane.showMessageDialog(null, "No se ha seleccionado ningún producto.", "Información", JOptionPane.INFORMATION_MESSAGE);
         }
-     else {
-        JOptionPane.showMessageDialog(null, "No se ha seleccionado ningún producto.", "Información", JOptionPane.INFORMATION_MESSAGE);
     }
-    }
+
     private void cobrarFactura(){
         //Haceer metodo void aparte
         Double total = 0.0;

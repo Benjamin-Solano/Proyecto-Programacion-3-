@@ -149,22 +149,6 @@ public class Service { //esto es un singleton
         return data.getProductos();  // Retorna la lista completa de productos
     }
 
-
-    public void actualizarProducto(Producto productoActualizado) {
-        List<Producto> productos = data.getProductos();
-
-        for (Producto producto : productos) {
-            if (producto.getCodigo().equals(productoActualizado.getCodigo())) {
-                // Actualizar los campos necesarios del producto
-                producto.setDescripcion(productoActualizado.getDescripcion());
-                producto.setExistencias(productoActualizado.getExistencias());
-                producto.setPrecioUnitario(productoActualizado.getPrecioUnitario());
-                // Aquí podrías agregar más campos a actualizar si es necesario
-                break;
-            }
-        }
-    }
-
     //================= Categoriass ============
 
     public void create(Categoria e) throws Exception {

@@ -83,5 +83,21 @@ public class buscarController {
         model.setMode(Application.MODE_CREATE);
         model.setCurrent(new Producto());
     }
+    public void actualizarLista(){
+        try {
+            Service service = Service.instance();
+            List<Producto> product = service.getProductos();
+            if (product != null) {
+                // Actualizar el modelo con los nuevos datos
+                model.setList(product);
+
+            } else {
+                System.out.println("Error: producto no encontrado.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error al actualizar los datos de los ComboBox: " + e.getMessage());
+        }
+    }
 
 }

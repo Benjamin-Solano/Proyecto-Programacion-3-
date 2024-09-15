@@ -21,7 +21,7 @@ import java.util.List;
 public class Controller {
     View view;
     Model model;
-
+    Service service = Service.instance();
     public Controller(View view, Model model) {
         try {
             List<Linea> lineas = Service.instance().getLineas();
@@ -104,5 +104,24 @@ public class Controller {
                 String numeroFactura = "FAC-" + String.format("%04d", contadorFacturas);
         contadorFacturas++;
         return numeroFactura;
+    }
+
+    public boolean existeLinea(Linea nuevaLinea) {
+        List<Linea> listaDeLineas = service.getLineas();
+        for (Linea linea : listaDeLineas) {
+            if (linea.getProducto().getCodigo().equals(nuevaLinea.getProducto().getCodigo())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void actualizarCantidad(Linea nuevaLinea) {
+        for (Linea linea : service.getLineas()) {
+            if (linea.getProducto().equals(nuevaLinea.getProducto())) {
+                linea.setCantidad(linea.getCantidad() + nuevaLinea.getCantidad());
+                break;
+            }
+        }
     }
 }
