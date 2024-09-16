@@ -297,7 +297,7 @@ public class Service { //esto es un singleton
         for (Linea l : data.getLineas()) {
             if (l.getProducto().getCodigo().equals(e.getProducto().getCodigo())) {
                 // Incrementar la cantidad de la línea existente
-                l.setCantidad(l.getCantidad() + e.getCantidad());
+                l.setCantidad(l.getCantidad() + 1);
                 return;
             }
         }
