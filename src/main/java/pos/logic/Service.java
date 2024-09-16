@@ -144,6 +144,12 @@ public class Service { //esto es un singleton
                 .sorted(Comparator.comparing(Producto::getCodigo))
                 .collect(Collectors.toList());
     }
+    public List<Producto> searchDescripcion(Producto e) {
+        return data.getProductos().stream()
+                .filter(i -> i.getDescripcion().contains(e.getDescripcion()))
+                .sorted(Comparator.comparing(Producto::getDescripcion))
+                .collect(Collectors.toList());
+    }
     public List<Producto> getProductos() {
         return data.getProductos();  // Retorna la lista completa de productos
     }
@@ -227,6 +233,7 @@ public class Service { //esto es un singleton
         return data.getLineas();  // Retorna la lista completa de Lineas
     }
 
+
     //================= Facturas ============
     public void create(Factura e) throws Exception {
 
@@ -265,7 +272,32 @@ public class Service { //esto es un singleton
     public List<Factura> getFacturas() {
         return data.getFacturas();  // Retorna la lista completa de Facturas
     }
-
+    public boolean existeLinea(Linea e) {
+        for (Linea l : data.getLineas()) {
+            if (l.getProducto().getCodigo().equals(e.getProducto().getCodigo())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public void actualizarCantidad(Linea e) throws Exception {
+        for (Linea l : data.getLineas()) {
+            if (l.getProducto().getCodigo().equals(e.getProducto().getCodigo())) {
+                // Incrementar la cantidad de la línea existente
+                l.setCantidad(l.getCantidad() + e.getCantidad());
+                return;
+            }
+        }
+        throw new Exception("No se encontró la línea para actualizar la cantidad.");
+    }
+    public Linea obtenerLineaEspecifica(Linea nuevaLinea) {
+        for (Linea linea : data.getLineas()) {
+            if (linea.equals(nuevaLinea)) {
+                return linea;
+            }
+        }
+        return null;
+    }
 //Esto es para el el num
     public int contadorFacturas=1;
 

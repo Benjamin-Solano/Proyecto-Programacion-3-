@@ -65,17 +65,23 @@ public class Controller {
             e.printStackTrace();
         }
     }
-    public void save(Linea e) throws  Exception{
-        switch (model.getMode()) {
-            case Application.MODE_CREATE:
-                Service.instance().create(e);
-                break;
-            case Application.MODE_EDIT:
-                Service.instance().update(e);
-                break;
+    public void save(Linea e) throws  Exception {
+        try {
+            switch (model.getMode()) {
+                case Application.MODE_CREATE:
+                    Service.instance().create(e);
+                    break;
+                case Application.MODE_EDIT:
+                    Service.instance().update(e);
+                    break;
+            }
+            model.setFilter(new Linea());
+            search(model.getFilter());
         }
-        model.setFilter(new Linea());
-        search(model.getFilter());
+        catch (Exception ex) {
+            System.out.println("Error al guardar la línea: " + ex.getMessage());
+            throw ex;
+        }
     }
 
     public void edit(int row){
@@ -99,7 +105,6 @@ public class Controller {
         try {
             // Obtener las listas actualizadas del servicio
             Service service = Service.instance();
-
             List<Cajero> cajeros = service.getCajeros(); // Obtener la lista de cajeros desde el servicio
             List<Cliente> clientes = service.getClientes(); // Obtener la lista de clientes desde el servicio
 

@@ -17,6 +17,7 @@ import java.util.Locale;
 import java.util.stream.IntStream;
 
 public class Controller {
+  /*
     View view;
     Model model;
 
@@ -97,4 +98,6 @@ public class Controller {
         model.setMode(Application.MODE_CREATE);
         model.setCurrent(new Categoria());
     }
+
+   */
 }

@@ -24,7 +24,7 @@ public class View {
     private JTable list;
     private JButton clear1Button;
     private JButton clearAllButton;
-
+/*
     public Component getPanel() {
         return panel;
     }
@@ -85,5 +85,5 @@ public class View {
 
         this.panel.revalidate();
     }
-
+*/
 }

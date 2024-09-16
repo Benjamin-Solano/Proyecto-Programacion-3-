@@ -4,6 +4,11 @@ import pos.Application;
 import pos.data.XmlPersister;
 import pos.logic.*;
 
+//SubPanel Buscar
+import pos.presentation.facturacion.buscarPanel.buscarController;
+import pos.presentation.facturacion.buscarPanel.buscarModel;
+import pos.presentation.facturacion.buscarPanel.buscarView;
+
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
@@ -14,7 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class View implements PropertyChangeListener {
+public class View implements PropertyChangeListener, SubPanelesFactura {
     private JPanel panel1;
     private JComboBox ClienteComboBox;
     private JComboBox CajeroComboBox;
@@ -34,13 +39,23 @@ public class View implements PropertyChangeListener {
     private JTextField textField4;
     private JScrollPane listaCompra;
 
+    private buscarView buscarView;
+    private buscarController buscarController;
+    private buscarModel buscarModel;
     private XmlPersister xmlPersister;
-
+    private Service service=Service.instance();
     public JPanel getPanel() {
         return panel1;
     }
 
     public View() {
+        buscarView = new buscarView();
+        buscarModel = new buscarModel();
+        buscarController = new buscarController(buscarView, buscarModel);
+        buscarView.setController(buscarController);
+        buscarView.setModel(buscarModel);
+        buscarView.setSize(600, 400);
+        buscarView.setLocationRelativeTo(null);
         //desarrollo de botones
         agregarButton.addActionListener(new ActionListener() {
             @Override
@@ -75,29 +90,14 @@ public class View implements PropertyChangeListener {
         cobrarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-            Double total = 0.0;
-                for(Linea temp: Service.instance().getLineas()){ //revisar, tiempo de compilación
-                 total+= (temp.getProducto().getPrecioUnitario()-temp.getDescuento());
-                }
-                //delpliegue de sub-panel
-
-
-                //según metodos de pago
-
+                cobrarFactura();
             }
         });
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //Abrir una ventana con todos los productos
-
-
-                //buscar por descrip
-
-                //reflejar codigo en campoText de producto
-
-
+                buscarView.setProductoSeleccionadoListener(View.this); // Registrar el View como escuchador
+                abrirVentanaBusqueda();
             }
         });
         cantidadButton.addActionListener(new ActionListener() {
@@ -234,6 +234,64 @@ public class View implements PropertyChangeListener {
         valid=true;; // Si todas las validaciones se pasan
         return valid;
     }
+    private void abrirVentanaBusqueda() {
+        if (buscarView == null && buscarModel == null) {
+            buscarView = new buscarView();
+            buscarModel = new buscarModel();
+            buscarController = new buscarController(buscarView, buscarModel);
+            buscarView.setController(buscarController);
+            buscarView.setModel(buscarModel);
+            buscarView.setSize(600, 400);
+            buscarView.setLocationRelativeTo(null);
+        }
+        buscarView.setVisible(true);
+    }
+    public void onProductoSeleccionado(Producto producto) {
+        if (producto != null) {
+            Linea nuevaLinea = new Linea();
+            nuevaLinea.setProducto(producto);
+            nuevaLinea.setCantidad(1); // Cantidad inicial
+            nuevaLinea.setDescuento(0);
+            System.out.println("Verificando si la línea ya existe...");
+            if (service.existeLinea(nuevaLinea)) {
+                try {
+                    //Extraer esa linea y settearla
+                    Linea lineaExistente = service.obtenerLineaEspecifica(nuevaLinea);
+                    System.out.println("Línea existente encontrada. Actualizando cantidad...");
+                    service.actualizarCantidad(lineaExistente);
+                    System.out.println("Cantidad actualizada correctamente en la línea existente.");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Error al actualizar la línea: " + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+            }
+            else{
+                try {
+                    System.out.println("Guardando nueva línea...");
+                    controller.save(nuevaLinea);
+                    System.out.println("Línea procesada correctamente.");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Error al guardar la línea: " + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        else {
+            buscarView.setVisible(false);
+            JOptionPane.showMessageDialog(null, "No se ha seleccionado ningún producto.", "Información", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
+    private void cobrarFactura(){
+        //Haceer metodo void aparte
+        Double total = 0.0;
+        for(Linea temp: Service.instance().getLineas()){ //revisar, tiempo de compilación
+            total+= (temp.getProducto().getPrecioUnitario()-temp.getDescuento());
+        }
+        //delpliegue de sub-panel
+
+
+        //según metodos de pago
+    }
 
     public Factura take() {
         TableModel mod= (TableModel) list.getModel();
@@ -298,8 +356,6 @@ public class View implements PropertyChangeListener {
 
             case Model.FILTER:
                 codigoProductoTxtfield.setText(model.getFilter().getProducto().getCodigo());
-
-                //El del segunfo panel de descripción
                 break;
         }
         this.panel1.revalidate();

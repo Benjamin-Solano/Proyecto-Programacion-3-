@@ -52,7 +52,7 @@ public class Application {
         pos.presentation.historico.View historicoView = new pos.presentation.historico.View();
         historicoController = new pos.presentation.historico.Controller(historicoView,historicoModel);
         Icon historicoIcon= new ImageIcon(Application.class.getResource("/pos/presentation/icons/facturaIcon.png"));
-
+/*
        pos.presentation.estadistica.Model estadisticaModel = new pos.presentation.estadistica.Model();
         pos.presentation.estadistica.View estadisticaView = new pos.presentation.estadistica.View();
         estadisticaController = new pos.presentation.estadistica.Controller(estadisticaView,estadisticaModel);

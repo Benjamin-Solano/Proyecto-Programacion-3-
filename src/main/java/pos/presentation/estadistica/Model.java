@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class Model extends AbstractModel {
-
+/*
     List<Categoria> categorias;
     List<Categoria> categoriaAll;
     Categoria filter;
@@ -140,5 +140,7 @@ public class Model extends AbstractModel {
         return current;
     }
 
-    public List<Categoria> getCategorias() {return categorias }
+    public List<Categoria> getCategorias() {return categorias; }
+
+ */
 }
