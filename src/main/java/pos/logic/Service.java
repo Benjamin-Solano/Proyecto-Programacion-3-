@@ -196,16 +196,27 @@ public class Service { //esto es un singleton
     //================= Lineas ============
 
     public void create(Linea e) throws Exception {
-
-        Linea result = data.getLineas().stream().filter(i -> i.getNumero().equals(e.getNumero())).findFirst().orElse(null);
-        if (result == null) data.getLineas().add(e);
-        else throw new Exception("Linea ya existe");
+        Linea result = data.getLineas().stream()
+                .filter(i -> i.getProducto().equals(e.getProducto()))
+                .findFirst()
+                .orElse(null);
+        if (result == null) {
+            data.getLineas().add(e);
+        } else {
+            throw new Exception("Linea ya existe");
+        }
     }
 
     public Linea read(Linea e) throws Exception {
-        Linea result = data.getLineas().stream().filter(i -> i.getNumero().equals(e.getNumero())).findFirst().orElse(null);
-        if (result != null) return result;
-        else throw new Exception("Linea no existe");
+        Linea result = data.getLineas().stream()
+                .filter(i -> i.getProducto().equals(e.getProducto()))
+                .findFirst()
+                .orElse(null);
+        if (result != null) {
+            return result;
+        } else {
+            throw new Exception("Linea no existe");
+        }
     }
 
     public void update(Linea e) throws Exception {
@@ -225,13 +236,15 @@ public class Service { //esto es un singleton
 
     public List<Linea> search(Linea e) {
         return data.getLineas().stream()
-                .filter(i -> i.numero.contains(e.getNumero()))
+                .filter(i -> i.getProducto().getCodigo().contains(e.getProducto().getCodigo()))
                 .sorted(Comparator.comparing(Linea::getNumero))
                 .collect(Collectors.toList());
     }
+
     public List<Linea> getLineas() {
         return data.getLineas();  // Retorna la lista completa de Lineas
     }
+
 
 
     //================= Facturas ============
@@ -255,7 +268,7 @@ public class Service { //esto es un singleton
             data.getFacturas().remove(result);
             data.getFacturas().add(e);
         } catch (Exception ex) {
-            throw new Exception("Linea no existe");
+            throw new Exception("Factura no existe");
         }
     }
 
@@ -298,7 +311,7 @@ public class Service { //esto es un singleton
         }
         return null;
     }
-//Esto es para el el num
+//Esto es para el num
     public int contadorFacturas=1;
 
 

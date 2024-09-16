@@ -23,7 +23,7 @@ public class buscarView extends javax.swing.JDialog implements PropertyChangeLis
     private JTable listSubPanel;
     private JLabel DescripcionLbl;
     private Producto productoSeleccionado;
-    private Service service= Service.instance();
+    private Service service = Service.instance();
     //MVC
     private buscarController busController;
     private buscarModel busModel;

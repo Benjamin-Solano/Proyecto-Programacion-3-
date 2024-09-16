@@ -71,7 +71,7 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
                         }
                     }
                     if(existeEnInventario!=null){
-                        JOptionPane.showMessageDialog(null, "El producto existe, ingresa la cantidad del producto");
+                        JOptionPane.showMessageDialog(null, "Producto agregado, ingresa la cantidad del producto");
                         Linea nuevo = new Linea();
                         nuevo.setProducto(existeEnInventario);
                         nuevo.setCantidad(1); //por defecto
@@ -118,7 +118,7 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
                             list.repaint();
                         }
                         else { //buscar excepcion para quitar este:
-                            JOptionPane.showMessageDialog(null, "Cantidad inválida. Debe ser menor o igual a lo disponible en inventario", "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "Cantidad inválida. Debe ser menor o igual a la cantidad disponible en inventario", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
                     catch (NumberFormatException ex) {
@@ -204,15 +204,15 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
         // se ha seleccionado una fila
         int filaSeleccionada = list.getSelectedRow();
         if (filaSeleccionada == -1) {
-            JOptionPane.showMessageDialog(null, "Debes seleccionar un producto de la lista", "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un producto de la lista", "Error", JOptionPane.ERROR_MESSAGE);
             valid=false;
         }
         // cantidad ingresada
-        String cantidadStr = JOptionPane.showInputDialog(null, "Ingresa la cantidad del producto:", "Cantidad", JOptionPane.INFORMATION_MESSAGE);
+        String cantidadStr = JOptionPane.showInputDialog(null, "Ingrese la cantidad del producto:", "Cantidad", JOptionPane.INFORMATION_MESSAGE);
         try {
             int cantidad = Integer.parseInt(cantidadStr);
             if (cantidad <= 0 || cantidad > existeEnInventario.getExistencias()) {
-                JOptionPane.showMessageDialog(null, "Cantidad inválida. Debe ser un número positivo y no superar el stock disponible", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Cantidad inválida. Debe ser un número positivo y no superar el inventario disponible", "Error", JOptionPane.ERROR_MESSAGE);
                 valid=false;
             }
         } catch (NumberFormatException e) {
@@ -220,7 +220,7 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
             valid=false;
         }
         // algún descuento y si es un número válido
-        String descuentoStr = JOptionPane.showInputDialog(null, "Ingresa el descuento:", "Descuento", JOptionPane.INFORMATION_MESSAGE);
+        String descuentoStr = JOptionPane.showInputDialog(null, "Ingrese el descuento:", "Descuento", JOptionPane.INFORMATION_MESSAGE);
         try {
             int descuento = Integer.parseInt(descuentoStr);
             if (descuento < 0 || descuento > existeEnInventario.getPrecioUnitario()) {
@@ -255,32 +255,36 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
             System.out.println("Verificando si la línea ya existe...");
             if (service.existeLinea(nuevaLinea)) {
                 try {
-                    //Extraer esa linea y settearla
+                    // Extraer esa linea y settearla
                     Linea lineaExistente = service.obtenerLineaEspecifica(nuevaLinea);
-                    System.out.println("Línea existente encontrada. Actualizando cantidad...");
-                    service.actualizarCantidad(lineaExistente);
-                    System.out.println("Cantidad actualizada correctamente en la línea existente.");
+                    if (lineaExistente != null) {
+                        System.out.println("Línea existente encontrada. Actualizando cantidad...");
+                        service.actualizarCantidad(lineaExistente);
+                        JOptionPane.showMessageDialog(null,"Cantidad actualizada correctamente para el producto seleccionado.");
+                    } else {
+                        System.out.println("Error: La línea existente es null");
+                    }
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error al actualizar la línea: " + e.getMessage());
                     throw new RuntimeException(e);
                 }
-            }
-            else{
+            } else {
                 try {
                     System.out.println("Guardando nueva línea...");
                     controller.save(nuevaLinea);
-                    System.out.println("Línea procesada correctamente.");
+                    JOptionPane.showMessageDialog(null,"Producto agregado correctamente.");
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error al guardar la línea: " + e.getMessage());
                     throw new RuntimeException(e);
                 }
             }
-        }
-        else {
+        } else {
             buscarView.setVisible(false);
             JOptionPane.showMessageDialog(null, "No se ha seleccionado ningún producto.", "Información", JOptionPane.INFORMATION_MESSAGE);
         }
     }
+
+
     private void cobrarFactura(){
         //Haceer metodo void aparte
         Double total = 0.0;

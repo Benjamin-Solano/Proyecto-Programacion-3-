@@ -30,6 +30,18 @@ public class Linea {
         this.cantidad = cantidad;
         this.descuento = descuento;
     }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Linea linea = (Linea) o;
+        return producto.equals(linea.producto);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(producto);
+    }
     public String getNumero() {return numero;}
     public void setNumero(String numero) {this.numero = numero;}
 

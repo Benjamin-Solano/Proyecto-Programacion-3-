@@ -3,6 +3,7 @@ package pos.logic;
 import jakarta.xml.bind.annotation.*;
 
 import java.util.Objects;
+import pos.logic.Categoria;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Producto {
