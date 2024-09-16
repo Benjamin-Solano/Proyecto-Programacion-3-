@@ -8,7 +8,7 @@ import java.beans.PropertyChangeListener;
 import java.util.List;
 
 public class Model  extends AbstractModel {
-
+    Factura filterFactura;
     Linea filter;
     List<Linea> list; //Estos son los productos que ha comprado
     Linea current;;
@@ -30,6 +30,7 @@ public class Model  extends AbstractModel {
         this.list = list;
         this.current = new Linea();
         this.filter = new Linea();
+        this.filterFactura=new Factura();
         this.clientes = clientes; // Cargar las clientes
         this.cajeros=cajeros;
         firePropertyChange(LIST);
@@ -42,6 +43,7 @@ public class Model  extends AbstractModel {
     public void notificarCambioLista() {
         firePropertyChange(LIST);
     }
+
     public List<Linea> getList(){
         return list;
     }
@@ -63,6 +65,9 @@ public class Model  extends AbstractModel {
 
     public int getMode() {return mode;}
     public void setMode(int mode) {this.mode = mode;}
+
+    public Factura getFilterFactura(){return filterFactura;}
+    public void setFilterFactura(Factura filter){this.filterFactura=filter; firePropertyChange(FILTER);}
 
     public static final String LIST="list";
     public static final String CURRENT="current";

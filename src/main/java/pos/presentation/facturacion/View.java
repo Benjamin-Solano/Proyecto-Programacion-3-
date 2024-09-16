@@ -8,7 +8,7 @@ import pos.logic.*;
 import pos.presentation.facturacion.buscarPanel.buscarController;
 import pos.presentation.facturacion.buscarPanel.buscarModel;
 import pos.presentation.facturacion.buscarPanel.buscarView;
-
+import pos.presentation.facturacion.cobrarPanel.cobrarView;
 
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class View implements PropertyChangeListener, SubPanelesFactura {
+public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelFacturaCobrar {
     private JPanel panel1;
     private JComboBox ClienteComboBox;
     private JComboBox CajeroComboBox;
@@ -33,15 +33,16 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
     private JTextField codigoProductoTxtfield;
     private JTable list;
     private JLabel ProductoLbl;
-    private JTextField textField1;
-    private JTextField textField2;
-    private JTextField textField3;
-    private JTextField textField4;
+    private JTextField ArticuloCantidaTextField;
+    private JTextField SubTotalTextField;
+    private JTextField DescuentoTextField;
+    private JTextField TotalTextField;
     private JScrollPane listaCompra;
-
+//De los sub-paneles
     private buscarView buscarView;
     private buscarController buscarController;
     private buscarModel buscarModel;
+    private cobrarView cobrarView;
     private XmlPersister xmlPersister;
     private Service service=Service.instance();
     public JPanel getPanel() {
@@ -49,6 +50,7 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
     }
 
     public View() {
+        //buscar
         buscarView = new buscarView();
         buscarModel = new buscarModel();
         buscarController = new buscarController(buscarView, buscarModel);
@@ -56,6 +58,9 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
         buscarView.setModel(buscarModel);
         buscarView.setSize(600, 400);
         buscarView.setLocationRelativeTo(null);
+        //cobrar
+        cobrarView  = null;
+
         //desarrollo de botones
         agregarButton.addActionListener(new ActionListener() {
             @Override
@@ -90,7 +95,8 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
         cobrarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cobrarFactura();
+                //MandarActionListener
+                abrirVentanaCobrar();
             }
         });
         buscarButton.addActionListener(new ActionListener() {
@@ -284,17 +290,36 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
         }
     }
 
-
-    private void cobrarFactura(){
-        //Haceer metodo void aparte
+    private void abrirVentanaCobrar() {
         Double total = 0.0;
         for(Linea temp: Service.instance().getLineas()){ //revisar, tiempo de compilación
             total+= (temp.getProducto().getPrecioUnitario()-temp.getDescuento());
         }
-        //delpliegue de sub-panel
+        if (cobrarView == null) {
+            cobrarView  = new cobrarView (total);
+            cobrarView .setSize(600, 400);
+            cobrarView .setLocationRelativeTo(null);
+        }
+        cobrarView .setVisible(true);
+    }
+    public void totalCompra(double total){
+        if(total==0){
+            //Guardamos la factura
+            Factura n= take();
+            try {
+                controller.saveFactura(n);
+                JOptionPane.showMessageDialog(panel1, "REGISTRO APLICADO", "", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(panel1, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
 
+            //lipiamos todos los campos
+        }else{
+            cobrarView.setVisible(false);
+            JOptionPane.showMessageDialog(null, "No termino la compra o queda como deudor", "Información", JOptionPane.INFORMATION_MESSAGE);
+            //Lipiamos los campos
+        }
 
-        //según metodos de pago
     }
 
     public Factura take() {

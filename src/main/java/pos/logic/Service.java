@@ -145,14 +145,21 @@ public class Service { //esto es un singleton
                 .collect(Collectors.toList());
     }
     public List<Producto> searchDescripcion(Producto e) {
-        return data.getProductos().stream()
+        return this.ProductosFiltroCantidad().stream()
                 .filter(i -> i.getDescripcion().contains(e.getDescripcion()))
+                .sorted(Comparator.comparing(Producto::getDescripcion))
+                .collect(Collectors.toList());
+    }
+    public List<Producto> ProductosFiltroCantidad() {
+        return data.getProductos().stream()
+                .filter(i -> i.getExistencias() >= 1) // Filtrar productos con existencia >= 1
                 .sorted(Comparator.comparing(Producto::getDescripcion))
                 .collect(Collectors.toList());
     }
     public List<Producto> getProductos() {
         return data.getProductos();  // Retorna la lista completa de productos
     }
+
     //================= Categoriass ============
 
     public void create(Categoria e) throws Exception {
@@ -193,6 +200,14 @@ public class Service { //esto es un singleton
         return data.getCategorias();  // Retorna la lista completa de productos
     }
 
+    public Producto obtenerProductoEspecifico(Producto produc) {
+        for (Producto producto : data.getProductos()) {
+            if (producto.equals(produc)) {
+                return producto;
+            }
+        }
+        return null;
+    }
     //================= Lineas ============
 
     public void create(Linea e) throws Exception {

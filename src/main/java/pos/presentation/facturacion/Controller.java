@@ -65,6 +65,43 @@ public class Controller {
             e.printStackTrace();
         }
     }
+
+
+    public void saveFactura(Factura factura) throws Exception {
+        try {
+            switch (model.getMode()) {
+                case Application.MODE_CREATE:
+                    Service.instance().create(factura);
+                    break;
+                case Application.MODE_EDIT:
+                    Service.instance().update(factura);
+                    break;
+            }
+            model.setFilterFactura(new Factura());
+            search(model.getFilter());
+        } catch (Exception ex) {
+            System.out.println("Error al guardar la factura: " + ex.getMessage());
+            throw ex;
+        }
+    }
+    public void deleteFactura() throws Exception {
+       /* Service.instance().delete(model.getCurrent());
+        search(model.getFilterFactura());
+
+        */
+    }
+
+    public void clearFactura() {
+       /* model.setMode(Application.MODE_CREATE);
+        model.setCurrent(new Factura());
+
+        */
+    }
+
+
+
+    //-----------------------------------De Lineas de Factura----------------------------------------------------
+
     public void save(Linea e) throws  Exception {
         try {
             switch (model.getMode()) {

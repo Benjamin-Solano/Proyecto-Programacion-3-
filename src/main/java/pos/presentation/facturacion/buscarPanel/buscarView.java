@@ -52,14 +52,21 @@ public class buscarView extends javax.swing.JDialog implements PropertyChangeLis
 
         listSubPanel.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
+                int existenciaActu;
                 if (e.getClickCount() == 2) {
                     int row = listSubPanel.getSelectedRow();
                     if (row >= 0) {
                         productoSeleccionado = ((buscarTableModel) listSubPanel.getModel()).getRowAt(row);
                         busController.edit(row);
                         onProductoSeleccionado(productoSeleccionado);
+                        //Cambia la existencia en la lista original de productos
+                        existenciaActu = (int) service.obtenerProductoEspecifico(productoSeleccionado).getExistencias();
                         if (productoSelectionListener != null) {
                             productoSelectionListener.onProductoSeleccionado(productoSeleccionado);
+                            service.obtenerProductoEspecifico(productoSeleccionado).setExistencias(existenciaActu - 1);
+                            busController.actualizarLista();
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Producto inexistente " );
                         }
                     }
                 }
