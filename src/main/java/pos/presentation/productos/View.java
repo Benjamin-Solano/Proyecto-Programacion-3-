@@ -216,7 +216,7 @@ public class View implements PropertyChangeListener {
                 descripcionTxtField.setText(model.getCurrent().getDescripcion());
                 unidadTxtField.setText(model.getCurrent().getUnidadDeMedida());
                 PrecioTxtField.setText(Float.toString(model.getCurrent().getPrecioUnitario())); //castear este porque es un float el precio
-              //  ExistenciaLbl.setText("" + model.getCurrent().getExistencias());
+                ExistenciaLbl.setText("" + model.getCurrent().getExistencias());
 
 
                 categoriaComboBox1.setSelectedItem(model.getCurrent().getCategoria());  // Mostrar categoría en el ComboBox, actual seleccionada

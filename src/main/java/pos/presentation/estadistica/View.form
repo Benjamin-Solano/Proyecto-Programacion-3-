@@ -48,25 +48,25 @@
                       <text value="Hasta"/>
                     </properties>
                   </component>
-                  <component id="831eb" class="javax.swing.JComboBox" binding="comboBox1" default-binding="true">
+                  <component id="831eb" class="javax.swing.JComboBox" binding="comboBoxDesdeAno">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
                   </component>
-                  <component id="e1802" class="javax.swing.JComboBox" binding="comboBox2" default-binding="true">
+                  <component id="e1802" class="javax.swing.JComboBox" binding="comboBoxDesdeMes">
                     <constraints>
                       <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
                   </component>
-                  <component id="62ba2" class="javax.swing.JComboBox" binding="comboBox3" default-binding="true">
+                  <component id="62ba2" class="javax.swing.JComboBox" binding="comboBoxHastaAno">
                     <constraints>
                       <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
                   </component>
-                  <component id="20dd3" class="javax.swing.JComboBox" binding="comboBox4" default-binding="true">
+                  <component id="20dd3" class="javax.swing.JComboBox" binding="comboBoxHastaMes">
                     <constraints>
                       <grid row="1" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -90,13 +90,13 @@
                       <text value="Categorias"/>
                     </properties>
                   </component>
-                  <component id="4e3e7" class="javax.swing.JComboBox" binding="comboBox5" default-binding="true">
+                  <component id="4e3e7" class="javax.swing.JComboBox" binding="comboBoxCategoria">
                     <constraints>
                       <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
                     <properties/>
                   </component>
-                  <component id="d02f9" class="javax.swing.JButton" binding="button1" default-binding="true">
+                  <component id="d02f9" class="javax.swing.JButton" binding="buttonCheck1">
                     <constraints>
                       <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -105,7 +105,7 @@
                       <text value=""/>
                     </properties>
                   </component>
-                  <component id="6a91b" class="javax.swing.JButton" binding="button2" default-binding="true">
+                  <component id="6a91b" class="javax.swing.JButton" binding="buttonCheck2">
                     <constraints>
                       <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                     </constraints>
@@ -126,7 +126,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="4f9e4" class="javax.swing.JTable" binding="table1" default-binding="true">
+              <component id="4f9e4" class="javax.swing.JTable" binding="list">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
                     <preferred-size width="150" height="50"/>
@@ -144,7 +144,7 @@
             <properties/>
             <border type="none"/>
             <children>
-              <component id="b6f65" class="javax.swing.JButton" binding="button3" default-binding="true">
+              <component id="b6f65" class="javax.swing.JButton" binding="clear1Button">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="6" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
@@ -153,7 +153,7 @@
                   <text value=""/>
                 </properties>
               </component>
-              <component id="bd775" class="javax.swing.JButton" binding="button4" default-binding="true">
+              <component id="bd775" class="javax.swing.JButton" binding="clearAllButton">
                 <constraints>
                   <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="10" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>

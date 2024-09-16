@@ -9,10 +9,7 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import pos.Application;
-import pos.logic.Cajero;
-import pos.logic.Cliente;
-import pos.logic.Linea;
-import pos.logic.Service;
+import pos.logic.*;
 import pos.data.XmlPersister;
 
 
@@ -125,4 +122,5 @@ public class Controller {
         contadorFacturas++;
         return numeroFactura;
     }
+
 }

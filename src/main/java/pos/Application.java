@@ -53,9 +53,9 @@ public class Application {
         historicoController = new pos.presentation.historico.Controller(historicoView,historicoModel);
         Icon historicoIcon= new ImageIcon(Application.class.getResource("/pos/presentation/icons/facturaIcon.png"));
 
-       /* pos.presentation.estadistica.Model estadisticaModel = new pos.presentation.estadistica.Model();
+       pos.presentation.estadistica.Model estadisticaModel = new pos.presentation.estadistica.Model();
         pos.presentation.estadistica.View estadisticaView = new pos.presentation.estadistica.View();
-        // estadisticaController = new pos.presentation.estadistica.Controller(estadisticaView,estadisticaModel);
+        estadisticaController = new pos.presentation.estadistica.Controller(estadisticaView,estadisticaModel);
         Icon estadisticoIcon= new ImageIcon(Objects.requireNonNull(Application.class.getResource("/pos/presentation/icons/estadistico.png")));
 */
 
