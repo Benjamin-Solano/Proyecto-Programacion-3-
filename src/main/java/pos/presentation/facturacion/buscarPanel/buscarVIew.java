@@ -2,6 +2,7 @@ package pos.presentation.facturacion.buscarPanel;
 
 import pos.logic.Producto;
 import pos.logic.Service;
+import pos.logic.SubPanelesFactura;
 
 
 import javax.swing.*;
@@ -14,7 +15,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 
-public class buscarVIew extends javax.swing.JDialog implements PropertyChangeListener {
+public class buscarVIew extends javax.swing.JDialog implements PropertyChangeListener, SubPanelesFactura {
     private javax.swing.JPanel contentPane;
     private javax.swing.JButton buttonOK;
     private javax.swing.JButton buttonCancel;
@@ -26,6 +27,7 @@ public class buscarVIew extends javax.swing.JDialog implements PropertyChangeLis
     //MVC
     private buscarController busController;
     private buscarModel busModel;
+    private SubPanelesFactura productoSelectionListener;
 
     public JPanel getPanel() {
         return contentPane;
@@ -55,7 +57,10 @@ public class buscarVIew extends javax.swing.JDialog implements PropertyChangeLis
                 if (row >= 0) {
                    productoSeleccionado = ((buscarTableModel) listSubPanel.getModel()).getRowAt(row);
                     busController.edit(row);
-                    setProductoSeleccionado(productoSeleccionado);
+                    onProductoSeleccionado(productoSeleccionado);
+                    if (productoSelectionListener != null) {
+                        productoSelectionListener.onProductoSeleccionado(productoSeleccionado);
+                    }
                 }
             }
         }
@@ -65,7 +70,6 @@ public class buscarVIew extends javax.swing.JDialog implements PropertyChangeLis
             busController.actualizarLista();
             }
         });
-
 
     setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
     addWindowListener(new java.awt.event.WindowAdapter() {
@@ -81,16 +85,20 @@ public class buscarVIew extends javax.swing.JDialog implements PropertyChangeLis
         }
         },  javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0),  javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
-    public void setProductoSeleccionado(Producto productoSeleccionado){
+    public void onProductoSeleccionado(Producto productoSeleccionado){
         this.productoSeleccionado = productoSeleccionado;
     }
     public Producto getProductoSeleccionado() {
         return this.productoSeleccionado;
     }
+
+    public void setProductoSeleccionadoListener(SubPanelesFactura listener) {
+        this.productoSelectionListener = listener;
+    }
+
     public void setController(buscarController buscarController) {
         this.busController = buscarController;
     }
-
     public void setModel(buscarModel model) {
         this.busModel = model;
         busModel.addPropertyChangeListener(this);

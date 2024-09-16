@@ -106,6 +106,7 @@ public class Service { //esto es un singleton
                 .collect(Collectors.toList());
     }
 
+
     //================= Productos ============
     public void create(Producto e) throws Exception {
 
@@ -148,6 +149,8 @@ public class Service { //esto es un singleton
     public List<Producto> getProductos() {
         return data.getProductos();  // Retorna la lista completa de productos
     }
+
+
 
     //================= Categoriass ============
 
@@ -195,7 +198,7 @@ public class Service { //esto es un singleton
 
         Linea result = data.getLineas().stream().filter(i -> i.getNumero().equals(e.getNumero())).findFirst().orElse(null);
         if (result == null) data.getLineas().add(e);
-        else throw new Exception("Linea ya existe");
+        else throw new Exception("Linea ya existeService");
     }
 
     public Linea read(Linea e) throws Exception {
@@ -229,10 +232,39 @@ public class Service { //esto es un singleton
         return data.getLineas();  // Retorna la lista completa de Lineas
     }
 
+    public boolean existeLinea(Linea e) {
+        for (Linea l : data.getLineas()) {
+            if (l.getProducto().getCodigo().equals(e.getProducto().getCodigo())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public void actualizarCantidad(Linea e) throws Exception {
+        for (Linea l : data.getLineas()) {
+            if (l.getProducto().getCodigo().equals(e.getProducto().getCodigo())) {
+                // Incrementar la cantidad de la línea existente
+                l.setCantidad(l.getCantidad() + e.getCantidad());
+                return;
+            }
+        }
+        throw new Exception("No se encontró la línea para actualizar la cantidad.");
+    }
+    public Linea obtenerLineaEspecifica(Linea nuevaLinea) {
+        for (Linea linea : data.getLineas()) {
+            if (linea.equals(nuevaLinea)) {
+                return linea;
+            }
+        }
+        return null;
+    }
+
         //================= Facturas ============
 
     //Para los num de Factura
     public int contadorFacturas = 1; // Iniciamos en 1
+
+
 }
 
 

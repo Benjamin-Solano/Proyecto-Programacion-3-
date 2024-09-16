@@ -18,7 +18,7 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class View implements PropertyChangeListener {
+public class View implements PropertyChangeListener, SubPanelesFactura {
     private JPanel panel1;
     private JComboBox ClienteComboBox;
     private JComboBox CajeroComboBox;
@@ -39,7 +39,7 @@ public class View implements PropertyChangeListener {
     private buscarVIew buscarView; //Primer sub panelLista de productos
     private pos.presentation.facturacion.buscarPanel.buscarController buscarController;
     private pos.presentation.facturacion.buscarPanel.buscarModel buscarModel;
-
+    private Service service =Service.instance();
     private XmlPersister xmlPersister;
 
     public JPanel getPanel() {
@@ -47,6 +47,14 @@ public class View implements PropertyChangeListener {
     }
 
     public View() {
+        buscarView = new buscarVIew();
+        buscarModel = new buscarModel();
+        buscarController = new buscarController(buscarView, buscarModel);
+        buscarView.setController(buscarController);
+        buscarView.setModel(buscarModel);
+        buscarView.setSize(600, 400);
+        buscarView.setLocationRelativeTo(null);
+
         //desarrollo de botones
         agregarButton.addActionListener(new ActionListener() {
             @Override
@@ -87,7 +95,9 @@ public class View implements PropertyChangeListener {
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                buscarView.setProductoSeleccionadoListener(View.this); // Registrar el View como escuchador
                abrirVentanaBusqueda();
+
             }
         });
 
@@ -218,10 +228,7 @@ public class View implements PropertyChangeListener {
             valid=true;; // Si todas las validaciones se pasan
         return valid;
     }
-
-
     private void abrirVentanaBusqueda() {
-        Producto prod = null; // Temporal
         if (buscarView == null && buscarModel == null) {
             buscarView = new buscarVIew();
             buscarModel = new buscarModel();
@@ -232,29 +239,42 @@ public class View implements PropertyChangeListener {
             buscarView.setLocationRelativeTo(null);
         }
         buscarView.setVisible(true);
-        prod = buscarView.getProductoSeleccionado();
-        if (prod != null) {
+    }
+    public void onProductoSeleccionado(Producto producto) {
+        if (producto != null) {
             Linea nuevaLinea = new Linea();
-            nuevaLinea.setProducto(prod);
+            nuevaLinea.setProducto(producto);
             nuevaLinea.setCantidad(1); // Cantidad inicial
             nuevaLinea.setDescuento(0);
-            nuevaLinea.setNumero(model.getCurrent().getNumero()+1);
-            try {
-                if (!controller.existeLinea(nuevaLinea)) {
-                    controller.save(nuevaLinea);
-                } else {
-                    JOptionPane.showMessageDialog(null, "La línea ya existe. Actualizando cantidad.");
-                    controller.actualizarCantidad(nuevaLinea);  // Método para actualizar la cantidad si ya existe
+            System.out.println("Verificando si la línea ya existe...");
+            if (service.existeLinea(nuevaLinea)) {
+                try {
+                    //Extraer esa linea y settearla
+                    Linea lineaExistente = service.obtenerLineaEspecifica(nuevaLinea);
+                    System.out.println("Línea existente encontrada. Actualizando cantidad...");
+                    service.actualizarCantidad(lineaExistente);
+                    System.out.println("Cantidad actualizada correctamente en la línea existente.");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Error al actualizar la línea: " + e.getMessage());
+                    throw new RuntimeException(e);
                 }
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Error al guardar la línea: " + e.getMessage());
-                throw new RuntimeException(e);
             }
-        } else {
+            else{
+                try {
+                    System.out.println("Guardando nueva línea...");
+                    controller.save(nuevaLinea);
+                    System.out.println("Línea procesada correctamente.");
+                } catch (Exception e) {
+                    JOptionPane.showMessageDialog(null, "Error al guardar la línea: " + e.getMessage());
+                    throw new RuntimeException(e);
+                }
+            }
+            }
+         else {
+            buscarView.setVisible(false);
             JOptionPane.showMessageDialog(null, "No se ha seleccionado ningún producto.", "Información", JOptionPane.INFORMATION_MESSAGE);
         }
     }
-
     private void cobrarFactura(){
         //Haceer metodo void aparte
         Double total = 0.0;

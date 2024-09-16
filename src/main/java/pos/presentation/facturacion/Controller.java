@@ -67,17 +67,23 @@ public class Controller {
             e.printStackTrace();
         }
     }
-    public void save(Linea e) throws  Exception{
-        switch (model.getMode()) {
-            case Application.MODE_CREATE:
-                Service.instance().create(e);
-                break;
-            case Application.MODE_EDIT:
-                Service.instance().update(e);
-                break;
+    public void save(Linea e) throws  Exception {
+        try {
+            switch (model.getMode()) {
+                case Application.MODE_CREATE:
+                        Service.instance().create(e);
+                    break;
+                case Application.MODE_EDIT:
+                    Service.instance().update(e);
+                    break;
+            }
+            model.setFilter(new Linea());
+            search(model.getFilter());
         }
-        model.setFilter(new Linea());
-        search(model.getFilter());
+        catch (Exception ex) {
+            System.out.println("Error al guardar la línea: " + ex.getMessage());
+            throw ex;
+        }
     }
 
     public void edit(int row){
@@ -106,22 +112,5 @@ public class Controller {
         return numeroFactura;
     }
 
-    public boolean existeLinea(Linea nuevaLinea) {
-        List<Linea> listaDeLineas = service.getLineas();
-        for (Linea linea : listaDeLineas) {
-            if (linea.getProducto().getCodigo().equals(nuevaLinea.getProducto().getCodigo())) {
-                return true;
-            }
-        }
-        return false;
-    }
 
-    public void actualizarCantidad(Linea nuevaLinea) {
-        for (Linea linea : service.getLineas()) {
-            if (linea.getProducto().getCodigo().equals(nuevaLinea.getProducto().getCodigo())) {
-                linea.setCantidad(linea.getCantidad() + nuevaLinea.getCantidad());
-                break;
-            }
-        }
-    }
 }
