@@ -329,7 +329,21 @@ public class Service { //esto es un singleton
     //Esto es para el num
     public int contadorFacturas=1;
 
+    //Este esta solo por mes, hay que ver lo de rango
+    public Float getVentas(Categoria categoria, int anno, int mes) {
+        float totalVentas = 0.0f;
+        for (Factura venta : data.getFacturas()) {
+            for(Linea linea : venta.getLineas()) {
+                if (linea.getProducto().getCategoria().equals(categoria) &&
+                        venta.getFecha().getYear() == anno &&
+                        venta.getFecha().getMonthValue() == mes) {
+                    totalVentas += venta.precioTotalPagar();
 
+                }
+            }
+        }
+        return totalVentas;
+    }
 
 }
 
