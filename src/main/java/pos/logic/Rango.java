@@ -6,18 +6,11 @@ public class Rango {
     private int mesFin;
     private int anioFin;
 
-    public Rango() {
+    public Rango(int anioInicio, int mesInicio, int anioFin, int mesFin) {
         mesInicio = 0;
         anioInicio = 0;
         mesFin = 0;
         anioFin = 0;
-    }
-
-    public Rango(int mesInicio, int anioInicio, int mesFin, int anioFin) {
-        this.mesInicio = mesInicio;
-        this.anioInicio = anioInicio;
-        this.mesFin = mesFin;
-        this.anioFin = anioFin;
     }
 
     public void setMesInicio(int mesInicio) { this.mesInicio = mesInicio; }
@@ -30,4 +23,22 @@ public class Rango {
     public int getMesFin() { return mesFin; }
     public int getAnioFin() { return anioFin; }
 
+    @Override
+    public String toString() {
+        return "Intervalo de Fecha [" + mesInicio + ", " + anioInicio + "||" + mesFin + ", " + anioFin + "]";
+    }
+
+    public boolean validacion_Rango() {
+
+        if(anioFin < anioInicio) {
+            return false;
+        } else if(anioFin == anioInicio && mesFin < mesInicio) {
+            return false;
+        } else if (mesInicio < 1 || mesInicio > 12 || mesFin < 1 || mesFin > 12) {
+            return false;
+        }
+
+        return true;
+
+    }
 }
