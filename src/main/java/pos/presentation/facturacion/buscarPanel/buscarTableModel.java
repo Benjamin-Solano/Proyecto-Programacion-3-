@@ -25,7 +25,7 @@ public class buscarTableModel extends AbstractTableModel<Producto> implements ja
             case unidadDeMedida: return e.getUnidadDeMedida();
             case precioUnitario: return e.getPrecioUnitario();
             case existencias: return e.getExistencias();
-            case categoria: return e.getCategoria();
+            case categoria: return e.getCategoria().getNombre();
             default: return "";
         }
     }

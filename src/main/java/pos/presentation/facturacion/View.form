@@ -249,7 +249,9 @@
                             <preferred-size width="70" height="-1"/>
                           </grid>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <text value=""/>
+                        </properties>
                       </component>
                     </children>
                   </grid>
@@ -275,7 +277,9 @@
                             <preferred-size width="150" height="-1"/>
                           </grid>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <text value=""/>
+                        </properties>
                       </component>
                     </children>
                   </grid>

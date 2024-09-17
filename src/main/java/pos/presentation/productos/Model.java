@@ -24,6 +24,7 @@ public class Model extends AbstractModel {
         firePropertyChange(CURRENT);
         firePropertyChange(FILTER);
         firePropertyChange(CATEGORIAS);
+
     }
 
     public Model() {
