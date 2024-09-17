@@ -104,7 +104,6 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                buscarView.setProductoSeleccionadoListener(View.this); // Registrar el View como escuchador
                 abrirVentanaBusqueda();
                 controller.actualizarTotales();
             }

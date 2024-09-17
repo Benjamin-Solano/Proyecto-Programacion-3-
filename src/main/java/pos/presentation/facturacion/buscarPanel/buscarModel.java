@@ -32,7 +32,6 @@ public class buscarModel extends AbstractModel {
         this.current = new Producto();
         this.filter = new Producto();
         firePropertyChange(LIST);
-
         this.mode= Application.MODE_CREATE;
     }
 

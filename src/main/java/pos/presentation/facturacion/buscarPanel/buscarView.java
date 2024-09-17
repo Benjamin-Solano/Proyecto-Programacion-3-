@@ -4,7 +4,6 @@ import pos.logic.Producto;
 import pos.logic.Service;
 import pos.logic.SubPanelesFactura;
 
-
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.event.ComponentAdapter;
@@ -14,14 +13,14 @@ import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-
-public class buscarView extends javax.swing.JDialog implements PropertyChangeListener, SubPanelesFactura {
-    private javax.swing.JPanel contentPane;
-    private javax.swing.JButton buttonOK;
-    private javax.swing.JButton buttonCancel;
+public class buscarView extends JDialog implements PropertyChangeListener, SubPanelesFactura {
+    private JPanel contentPane;
+    private JButton buttonOK;
+    private JButton buttonCancel;
+    private JLabel DescripcionLbl;
     private JTextField DescripcionTextField;
     private JTable listSubPanel;
-    private JLabel DescripcionLbl;
+    
     private Producto productoSeleccionado;
     private Service service = Service.instance();
     //MVC
@@ -32,12 +31,11 @@ public class buscarView extends javax.swing.JDialog implements PropertyChangeLis
     public JPanel getPanel() {
         return contentPane;
     }
+    public buscarView() {
 
-    public buscarView(){
         setContentPane(contentPane);
         setModal(true);
         getRootPane().setDefaultButton(buttonOK);
-
         buttonOK.addActionListener(new java.awt.event.ActionListener(){
             public void actionPerformed(java.awt.event.ActionEvent e){
                 onOK();
@@ -91,7 +89,9 @@ public class buscarView extends javax.swing.JDialog implements PropertyChangeLis
                 onCancel();
             }
         },  javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0),  javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+
     }
+
     public void onProductoSeleccionado(Producto productoSeleccionado){
         this.productoSeleccionado = productoSeleccionado;
     }
@@ -155,5 +155,4 @@ public class buscarView extends javax.swing.JDialog implements PropertyChangeLis
         // add your code here if necessary
         dispose();
     }
-
 }
