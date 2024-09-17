@@ -3,22 +3,23 @@ package pos.presentation.facturacion;
 import pos.Application;
 import pos.data.XmlPersister;
 import pos.logic.*;
-//El panel buscar
+
+//SubPanel Buscar
 import pos.presentation.facturacion.buscarPanel.buscarController;
 import pos.presentation.facturacion.buscarPanel.buscarModel;
-import pos.presentation.facturacion.buscarPanel.buscarVIew;
+import pos.presentation.facturacion.buscarPanel.buscarView;
+import pos.presentation.facturacion.cobrarPanel.cobrarView;
+
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class View implements PropertyChangeListener, SubPanelesFactura {
+public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelFacturaCobrar {
     private JPanel panel1;
     private JComboBox ClienteComboBox;
     private JComboBox CajeroComboBox;
@@ -32,30 +33,36 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
     private JTextField codigoProductoTxtfield;
     private JTable list;
     private JLabel ProductoLbl;
-    private JTextField textField1;
-    private JTextField textField2;
-    private JTextField textField3;
-    private JTextField textField4;
-    private buscarVIew buscarView; //Primer sub panelLista de productos
-    private pos.presentation.facturacion.buscarPanel.buscarController buscarController;
-    private pos.presentation.facturacion.buscarPanel.buscarModel buscarModel;
-    private Service service =Service.instance();
+    private JTextField ArticuloCantidaTextField;
+    private JTextField SubTotalTextField;
+    private JTextField DescuentoTextField;
+    private JTextField TotalTextField;
+    private JScrollPane listaCompra;
+    //De los sub-paneles
+    private buscarView buscarView;
+    private buscarController buscarController;
+    private buscarModel buscarModel;
+    private cobrarView cobrarView;
     private XmlPersister xmlPersister;
-
+    private Service service=Service.instance();
     public JPanel getPanel() {
         return panel1;
     }
 
     public View() {
-        buscarView = new buscarVIew();
+        //buscar
+        buscarView = new buscarView();
         buscarModel = new buscarModel();
         buscarController = new buscarController(buscarView, buscarModel);
         buscarView.setController(buscarController);
         buscarView.setModel(buscarModel);
         buscarView.setSize(600, 400);
         buscarView.setLocationRelativeTo(null);
+        //cobrar
+        cobrarView  = null;
 
         //desarrollo de botones
+
         agregarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -70,7 +77,7 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
                         }
                     }
                     if(existeEnInventario!=null){
-                        JOptionPane.showMessageDialog(null, "El producto existe, ingresa la cantidad del producto");
+                        JOptionPane.showMessageDialog(null, "Producto agregado, ingresa la cantidad del producto");
                         Linea nuevo = new Linea();
                         nuevo.setProducto(existeEnInventario);
                         nuevo.setCantidad(1); //por defecto
@@ -84,47 +91,49 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(panel1, ex.getMessage(), "Información", JOptionPane.INFORMATION_MESSAGE);
                 }
+                controller.actualizarTotales();
             }
         });
         cobrarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            cobrarFactura();
+                //MandarActionListener
+                abrirVentanaCobrar();
             }
         });
         buscarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 buscarView.setProductoSeleccionadoListener(View.this); // Registrar el View como escuchador
-               abrirVentanaBusqueda();
-
+                abrirVentanaBusqueda();
+                controller.actualizarTotales();
             }
         });
-
         cantidadButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int indiceFilaSeleccionada = list.getSelectedRow();
-                    Linea lineaSeleccionada = model.getList().get(indiceFilaSeleccionada);
-                    try {
-                        String newCantidadStr = JOptionPane.showInputDialog(null, "Ingresa la nueva cantidad:", lineaSeleccionada.getCantidad());
-                        int newCantidad = Integer.parseInt(newCantidadStr); // Convertir a entero
+                Linea lineaSeleccionada = model.getList().get(indiceFilaSeleccionada);
+                try {
+                    String newCantidadStr = JOptionPane.showInputDialog(null, "Ingresa la nueva cantidad:", lineaSeleccionada.getCantidad());
+                    int newCantidad = Integer.parseInt(newCantidadStr); // Convertir a entero
 //verificación de que esa cantidad si se pueda
-                        if(newCantidad>lineaSeleccionada.getProducto().getExistencias()){
-                            lineaSeleccionada.setCantidad(newCantidad);
-                            lineaSeleccionada.getProducto().setExistencias(newCantidad-1); //del por defecto al agregar producto
-                            model.setList(model.getList());
-                            // Refrescar la vista (JTable)
-                            list.revalidate();
-                            list.repaint();
-                        }
-                        else { //buscar excepcion para quitar este:
-                            JOptionPane.showMessageDialog(null, "Cantidad inválida. Debe ser menor o igual a lo disponible en inventario", "Error", JOptionPane.ERROR_MESSAGE);
-                        }
+                    if(newCantidad>lineaSeleccionada.getProducto().getExistencias()){
+                        lineaSeleccionada.setCantidad(newCantidad);
+                        lineaSeleccionada.getProducto().setExistencias(newCantidad-1); //del por defecto al agregar producto
+                        model.setList(model.getList());
+                        // Refrescar la vista (JTable)
+                        list.revalidate();
+                        list.repaint();
                     }
-                    catch (NumberFormatException ex) {
-                        JOptionPane.showMessageDialog(null, "Cantidad inválida. Debe ser un número entero.", "Error", JOptionPane.ERROR_MESSAGE);
+                    else { //buscar excepcion para quitar este:
+                        JOptionPane.showMessageDialog(null, "Cantidad inválida. Debe ser menor o igual a la cantidad disponible en inventario", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
+                catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(null, "Cantidad inválida. Debe ser un número entero.", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                controller.actualizarTotales();
             }
         });
 
@@ -133,18 +142,25 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
             public void mouseClicked(MouseEvent e) {
                 int row = list.getSelectedRow();
                 controller.edit(row);
+                controller.actualizarTotales();
             }
         });
         quitarButton.addActionListener(new ActionListener() { //Este es similar al limpiarButton
             @Override
             public void actionPerformed(ActionEvent e) {
-                //regresar cantidades modificadas a originales, revisar
-                int anteriorExistencia=0;
-                for(Linea temp: Service.instance().getLineas()) {
-                    anteriorExistencia= (int)temp.getProducto().getExistencias();
-                    temp.getProducto().setExistencias(temp.getCantidad()+anteriorExistencia);
+                int selectedRow = list.getSelectedRow();
+                if (selectedRow >= 0) { // Verificar si se ha seleccionado una fila
+                    Linea lineaSeleccionada = model.getList().get(selectedRow); // Obtener la línea seleccionada
+                    Producto producto = lineaSeleccionada.getProducto();
+                    producto.setExistencias((int) (producto.getExistencias() + lineaSeleccionada.getCantidad()));
+                    model.getList().remove(selectedRow);
+
+                    model.notificarCambioLista();
+
+                } else {
+                    JOptionPane.showMessageDialog(null, "Debe seleccionar una línea para eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
-                controller.clear();
+                controller.actualizarTotales();
             }
         });
         descuentoButton.addActionListener(new ActionListener() {
@@ -155,82 +171,85 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
                 String descuentoStr= JOptionPane.showInputDialog(null, "Ingresa descuento por aplicar:", lineaSeleccionada.getCantidad());
                 int descuento = Integer.parseInt(descuentoStr);
                 model.getCurrent().setDescuento(descuento);
+                controller.actualizarTotales();
             }
         });
         cancelarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //regresar cantidades modificadas a originales, revisar
-                int anteriorExistencia=0;
                 for(Linea temp: Service.instance().getLineas()) {
-                    anteriorExistencia= (int)temp.getProducto().getExistencias();
-                    temp.getProducto().setExistencias(temp.getCantidad()+anteriorExistencia);
+                    temp.getProducto().setExistencias((int)(temp.getCantidad()+temp.getProducto().getExistencias()));
                 }
                 try {
-                    controller.delete();
+                    controller.clear();
                     JOptionPane.showMessageDialog(panel1, "Compra borrada", "", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(panel1, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
+        panel1.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentShown(ComponentEvent e) {
+                controller.actualizarComboBox();
+            }
+        });
     }
 
     private boolean validate() {
         boolean valid = true;
-            String codProducto = codigoProductoTxtfield.getText();
-            if (codProducto == null || codProducto.trim().isEmpty()) {
-                JOptionPane.showMessageDialog(null, "El código del producto no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
+        String codProducto = codigoProductoTxtfield.getText();
+        if (codProducto == null || codProducto.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(null, "El código del producto no puede estar vacío", "Error", JOptionPane.ERROR_MESSAGE);
+            valid=false;
+        }
+        Producto existeEnInventario = null;
+        for (Producto producto : Service.instance().getProductos()) {
+            if (producto.getCodigo().equals(codProducto)) {
+                existeEnInventario = producto;
+                break;
+            }
+        }
+        if (existeEnInventario == null) {
+            JOptionPane.showMessageDialog(null, "El producto no existe en el inventario", "Error", JOptionPane.ERROR_MESSAGE);
+            valid=false;
+        }
+        // se ha seleccionado una fila
+        int filaSeleccionada = list.getSelectedRow();
+        if (filaSeleccionada == -1) {
+            JOptionPane.showMessageDialog(null, "Debe seleccionar un producto de la lista", "Error", JOptionPane.ERROR_MESSAGE);
+            valid=false;
+        }
+        // cantidad ingresada
+        String cantidadStr = JOptionPane.showInputDialog(null, "Ingrese la cantidad del producto:", "Cantidad", JOptionPane.INFORMATION_MESSAGE);
+        try {
+            int cantidad = Integer.parseInt(cantidadStr);
+            if (cantidad <= 0 || cantidad > existeEnInventario.getExistencias()) {
+                JOptionPane.showMessageDialog(null, "Cantidad inválida. Debe ser un número positivo y no superar el inventario disponible", "Error", JOptionPane.ERROR_MESSAGE);
                 valid=false;
             }
-            Producto existeEnInventario = null; //Revisar
-            for (Producto producto : Service.instance().getProductos()) {
-                if (producto.getCodigo().equals(codProducto)) {
-                    existeEnInventario = producto;
-                    break;
-                }
-            }
-            if (existeEnInventario == null) {
-                JOptionPane.showMessageDialog(null, "El producto no existe en el inventario", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "La cantidad debe ser un número entero válido", "Error", JOptionPane.ERROR_MESSAGE);
+            valid=false;
+        }
+        // algún descuento y si es un número válido
+        String descuentoStr = JOptionPane.showInputDialog(null, "Ingrese el descuento:", "Descuento", JOptionPane.INFORMATION_MESSAGE);
+        try {
+            int descuento = Integer.parseInt(descuentoStr);
+            if (descuento < 0 || descuento > existeEnInventario.getPrecioUnitario()) {
+                JOptionPane.showMessageDialog(null, "El descuento no puede ser mayor al precio del producto", "Error", JOptionPane.ERROR_MESSAGE);
                 valid=false;
             }
-            // se ha seleccionado una fila
-            int filaSeleccionada = list.getSelectedRow();
-            if (filaSeleccionada == -1) {
-                JOptionPane.showMessageDialog(null, "Debes seleccionar un producto de la lista", "Error", JOptionPane.ERROR_MESSAGE);
-                valid=false;
-            }
-            // cantidad ingresada
-            String cantidadStr = JOptionPane.showInputDialog(null, "Ingresa la cantidad del producto:", "Cantidad", JOptionPane.INFORMATION_MESSAGE);
-            try {
-                int cantidad = Integer.parseInt(cantidadStr);
-                if (cantidad <= 0 || cantidad > existeEnInventario.getExistencias()) {
-                    JOptionPane.showMessageDialog(null, "Cantidad inválida. Debe ser un número positivo y no superar el stock disponible", "Error", JOptionPane.ERROR_MESSAGE);
-                    valid=false;
-                }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "La cantidad debe ser un número entero válido", "Error", JOptionPane.ERROR_MESSAGE);
-                valid=false;
-            }
-
-            // hay algún descuento y si es un número válido
-            String descuentoStr = JOptionPane.showInputDialog(null, "Ingresa el descuento:", "Descuento", JOptionPane.INFORMATION_MESSAGE);
-            try {
-                int descuento = Integer.parseInt(descuentoStr);
-                if (descuento < 0 || descuento > existeEnInventario.getPrecioUnitario()) {
-                    JOptionPane.showMessageDialog(null, "El descuento no puede ser mayor al precio del producto", "Error", JOptionPane.ERROR_MESSAGE);
-                    valid=false;
-                }
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "El descuento debe ser un número entero válido", "Error", JOptionPane.ERROR_MESSAGE);
-                valid=false;
-            }
-            valid=true;; // Si todas las validaciones se pasan
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "El descuento debe ser un número entero válido", "Error", JOptionPane.ERROR_MESSAGE);
+            valid=false;
+        }
+        valid=true;; // Si todas las validaciones se pasan
         return valid;
     }
     private void abrirVentanaBusqueda() {
         if (buscarView == null && buscarModel == null) {
-            buscarView = new buscarVIew();
+            buscarView = new buscarView();
             buscarModel = new buscarModel();
             buscarController = new buscarController(buscarView, buscarModel);
             buscarView.setController(buscarController);
@@ -249,63 +268,92 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
             System.out.println("Verificando si la línea ya existe...");
             if (service.existeLinea(nuevaLinea)) {
                 try {
-                    //Extraer esa linea y settearla
+                    // Extraer esa linea y settearla
                     Linea lineaExistente = service.obtenerLineaEspecifica(nuevaLinea);
-                    System.out.println("Línea existente encontrada. Actualizando cantidad...");
-                    service.actualizarCantidad(lineaExistente);
-                    System.out.println("Cantidad actualizada correctamente en la línea existente.");
+                    if (lineaExistente != null) {
+                        System.out.println("Línea existente encontrada. Actualizando cantidad...");
+                        service.actualizarCantidad(lineaExistente);
+                        JOptionPane.showMessageDialog(null,"Cantidad actualizada correctamente para el producto seleccionado.");
+                    } else {
+                        System.out.println("Error: La línea existente es null");
+                    }
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error al actualizar la línea: " + e.getMessage());
                     throw new RuntimeException(e);
                 }
-            }
-            else{
+            } else {
                 try {
                     System.out.println("Guardando nueva línea...");
                     controller.save(nuevaLinea);
-                    System.out.println("Línea procesada correctamente.");
+                    JOptionPane.showMessageDialog(null,"Producto agregado correctamente.");
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error al guardar la línea: " + e.getMessage());
                     throw new RuntimeException(e);
                 }
             }
-            }
-         else {
+        } else {
             buscarView.setVisible(false);
             JOptionPane.showMessageDialog(null, "No se ha seleccionado ningún producto.", "Información", JOptionPane.INFORMATION_MESSAGE);
         }
     }
-    private void cobrarFactura(){
-        //Haceer metodo void aparte
-        Double total = 0.0;
-        for(Linea temp: Service.instance().getLineas()){ //revisar, tiempo de compilación
-            total+= (temp.getProducto().getPrecioUnitario()-temp.getDescuento());
+
+    private void abrirVentanaCobrar() {
+        Double total = model.currentFactura.precioTotalPagar();
+        if (cobrarView == null) {
+            cobrarView  = new cobrarView (total);
+            cobrarView .setSize(600, 400);
+            cobrarView .setLocationRelativeTo(null);
         }
-        //delpliegue de sub-panel
+        cobrarView .setVisible(true);
+    }
+    public void actualizarCamposTotales(int totalArticulos, double subtotal, double descuentos, double total) {
 
+        // Actualizar campos visuales con los nuevos valores
+        ArticuloCantidaTextField.setEditable(false);
+        ArticuloCantidaTextField.setText(String.valueOf(totalArticulos));
+        SubTotalTextField.setText(String.format("%.2f", subtotal));
+        DescuentoTextField.setText(String.format("%.2f", descuentos));
+        TotalTextField.setText(String.format("%.2f", total));
+    }
 
-        //según metodos de pago
+    public void totalCompra(double total){
+        if(total==0){
+            //Guardamos la factura
+            Factura n= take();
+            try {
+                controller.saveF(n);
+                JOptionPane.showMessageDialog(panel1, "REGISTRO APLICADO", "", JOptionPane.INFORMATION_MESSAGE);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(panel1, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+            //lipiamos todos los campos
+        }else{
+            cobrarView.setVisible(false);
+            JOptionPane.showMessageDialog(null, "No termino la compra o queda como deudor", "Información", JOptionPane.INFORMATION_MESSAGE);
+            //Lipiamos los campos
+        }
+
     }
 
     public Factura take() {
         TableModel mod= (TableModel) list.getModel();
         Factura e = new Factura();
-             e.setNumero(controller.generadorNumFactura());
-             e.setCliente((Cliente)ClienteComboBox.getSelectedItem());
-             e.setCajero((Cajero)CajeroComboBox.getSelectedItem());
-            List<Linea> lineas = new ArrayList<>();
-            for (int i = 0; i < mod.getRowCount(); i++) {
-                Linea linea = (Linea) model.getList().get(i);
-                lineas.add(linea);
-            }
-            e.setLineas(lineas);
-            //e.setFecha( );
-    return e;
+        e.setNumero(controller.generadorNumFactura());
+        e.setCliente((Cliente)ClienteComboBox.getSelectedItem());
+        e.setCajero((Cajero)CajeroComboBox.getSelectedItem());
+        List<Linea> lineas = new ArrayList<>();
+        for (int i = 0; i < mod.getRowCount(); i++) {
+            Linea linea = (Linea) model.getList().get(i);
+            lineas.add(linea);
+        }
+        e.setLineas(lineas);
+        e.setFecha(LocalDate.now());
+        return e;
     }
 
-
     // MVC
-     Model model;
+    Model model;
     Controller controller;
 
     public void setModel(Model model) {
@@ -325,7 +373,6 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
                 list.setRowHeight(30);
                 TableColumnModel columnModel = list.getColumnModel();
                 columnModel.getColumn(1).setPreferredWidth(150);
-                columnModel.getColumn(3).setPreferredWidth(150);
                 break;
             case Model.CURRENT:
                 CajeroComboBox.setSelectedItem(model.getCajeros());  // Mostrar cajeros en el ComboBox
@@ -354,7 +401,6 @@ public class View implements PropertyChangeListener, SubPanelesFactura {
                 codigoProductoTxtfield.setText(model.getFilter().getProducto().getCodigo());
                 break;
         }
-
         this.panel1.revalidate();
     }
 }

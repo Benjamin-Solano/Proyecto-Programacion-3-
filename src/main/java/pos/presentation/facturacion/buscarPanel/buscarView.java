@@ -15,15 +15,15 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 
-public class buscarVIew extends javax.swing.JDialog implements PropertyChangeListener, SubPanelesFactura {
+public class buscarView extends javax.swing.JDialog implements PropertyChangeListener, SubPanelesFactura {
     private javax.swing.JPanel contentPane;
     private javax.swing.JButton buttonOK;
     private javax.swing.JButton buttonCancel;
     private JTextField DescripcionTextField;
     private JTable listSubPanel;
-    private JLabel DescripciónLbl;
+    private JLabel DescripcionLbl;
     private Producto productoSeleccionado;
-    private Service service= Service.instance();
+    private Service service = Service.instance();
     //MVC
     private buscarController busController;
     private buscarModel busModel;
@@ -33,56 +33,63 @@ public class buscarVIew extends javax.swing.JDialog implements PropertyChangeLis
         return contentPane;
     }
 
-    public buscarVIew(){
-    setContentPane(contentPane);
-    setModal(true);
-    getRootPane().setDefaultButton(buttonOK);
+    public buscarView(){
+        setContentPane(contentPane);
+        setModal(true);
+        getRootPane().setDefaultButton(buttonOK);
 
-    buttonOK.addActionListener(new java.awt.event.ActionListener(){
-        public void actionPerformed(java.awt.event.ActionEvent e){
-            onOK();
-        }
-    });
-
-    buttonCancel.addActionListener(new java.awt.event.ActionListener(){
-        public void actionPerformed(java.awt.event.ActionEvent e){
-            onCancel();
-        }
-    });
-
-    listSubPanel.addMouseListener(new MouseAdapter() {
-        public void mouseClicked(MouseEvent e) {
-            if (e.getClickCount() == 2) {
-                int row = listSubPanel.getSelectedRow();
-                if (row >= 0) {
-                   productoSeleccionado = ((buscarTableModel) listSubPanel.getModel()).getRowAt(row);
-                    busController.edit(row);
-                    onProductoSeleccionado(productoSeleccionado);
-                    if (productoSelectionListener != null) {
-                        productoSelectionListener.onProductoSeleccionado(productoSeleccionado);
-                    }
-                }
-            }
-        }
-    });
-    contentPane.addComponentListener(new ComponentAdapter() {
-        public void componentShown(ComponentEvent e) {
-            busController.actualizarLista();
+        buttonOK.addActionListener(new java.awt.event.ActionListener(){
+            public void actionPerformed(java.awt.event.ActionEvent e){
+                onOK();
             }
         });
 
-    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-    addWindowListener(new java.awt.event.WindowAdapter() {
-      public void windowClosing(java.awt.event.WindowEvent e) {
-       onCancel();
-      }
-    });
+        buttonCancel.addActionListener(new java.awt.event.ActionListener(){
+            public void actionPerformed(java.awt.event.ActionEvent e){
+                onCancel();
+            }
+        });
 
-     // call onCancel() on ESCAPE
-    contentPane.registerKeyboardAction(  new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent e) {
-            onCancel();
-        }
+        listSubPanel.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int existenciaActu;
+                if (e.getClickCount() == 2) {
+                    int row = listSubPanel.getSelectedRow();
+                    if (row >= 0) {
+                        productoSeleccionado = ((buscarTableModel) listSubPanel.getModel()).getRowAt(row);
+                        busController.edit(row);
+                        onProductoSeleccionado(productoSeleccionado);
+                        //Cambia la existencia en la lista original de productos
+                        existenciaActu = (int) service.obtenerProductoEspecifico(productoSeleccionado).getExistencias();
+                        if (productoSelectionListener != null) {
+                            productoSelectionListener.onProductoSeleccionado(productoSeleccionado);
+                            service.obtenerProductoEspecifico(productoSeleccionado).setExistencias(existenciaActu - 1);
+                            busController.actualizarLista();
+                        }else{
+                            JOptionPane.showMessageDialog(null, "Producto inexistente " );
+                        }
+                    }
+                }
+            }
+        });
+        contentPane.addComponentListener(new ComponentAdapter() {
+            public void componentShown(ComponentEvent e) {
+                busController.actualizarLista();
+            }
+        });
+
+        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                onCancel();
+            }
+        });
+
+        // call onCancel() on ESCAPE
+        contentPane.registerKeyboardAction(  new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent e) {
+                onCancel();
+            }
         },  javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, 0),  javax.swing.JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
     }
     public void onProductoSeleccionado(Producto productoSeleccionado){
@@ -145,8 +152,8 @@ public class buscarVIew extends javax.swing.JDialog implements PropertyChangeLis
     }
 
     private void onCancel(){
-     // add your code here if necessary
-    dispose();
+        // add your code here if necessary
+        dispose();
     }
 
 }
