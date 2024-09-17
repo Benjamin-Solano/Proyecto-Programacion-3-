@@ -1,5 +1,5 @@
-package pos.logic;public interface
+package pos.logic;
 
-    SubPanelesFactura {
-        void onProductoSeleccionado(Producto producto);
-    }
+public interface SubPanelesFactura {
+    void onProductoSeleccionado(Producto producto);
+}

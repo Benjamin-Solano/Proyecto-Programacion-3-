@@ -10,13 +10,13 @@ import java.util.List;
 
 public class buscarController {
 
-    buscarView view;
+    buscarVIew view;
     buscarModel model;
     Service service = Service.instance();
-    public buscarController(buscarView view, buscarModel model) {
+    public buscarController(buscarVIew view, buscarModel model) {
         try{
 
-            List<Producto> productos = Service.instance().ProductosFiltroCantidad();
+            List<Producto> productos = Service.instance().getProductos();
             System.out.println("Productos cargados: " + productos.size());
             if (productos != null  && !productos.isEmpty()) {
                 model.init(productos);
@@ -42,12 +42,12 @@ public class buscarController {
         model.setFilter(filter);
         model.setMode(Application.MODE_CREATE);
         model.setCurrent(new Producto());
-        model.setList(service.searchDescripcion(model.getFilter()));
+        model.setList(Service.instance().searchDescripcion(model.getFilter()));
     }
 
     public void init() {
         try {
-            model.init(Service.instance().ProductosFiltroCantidad());
+            model.init(Service.instance().getProductos());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -85,9 +85,11 @@ public class buscarController {
     }
     public void actualizarLista(){
         try {
-            List<Producto> product = service.ProductosFiltroCantidad();
+            List<Producto> product = service.getProductos();
             if (product != null) {
+                // Actualizar el modelo con los nuevos datos
                 model.setList(product);
+
             } else {
                 System.out.println("Error: producto no encontrado.");
             }
@@ -96,4 +98,7 @@ public class buscarController {
             System.out.println("Error al actualizar los datos de los ComboBox: " + e.getMessage());
         }
     }
+
+
+
 }

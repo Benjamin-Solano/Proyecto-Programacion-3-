@@ -2,10 +2,7 @@ package pos.presentation.estadistica;
 
 import pos.logic.Categoria;
 
-import org.jfree.chart.ChartUtilities;
-import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.chart.plot.PlotOrientation;
-import org.jfree.chart.renderer.category.LineAndShapeRenderer;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -26,7 +23,7 @@ public class View implements PropertyChangeListener{
     private JComboBox<Integer> DesdeMes;
     private JComboBox<Integer> HastaAno;
     private JComboBox<Integer> HastaMes;
-    private JComboBox<Categoria> comboCategoria;
+    public JComboBox<Categoria> comboCategoria;
     private JButton buttonCheck1;
     private JButton buttonCheck2;
     private JTable datosLista;
@@ -41,13 +38,15 @@ public class View implements PropertyChangeListener{
         return panel;
     }
 
+    public void setController(Controller controller) { this.controller = controller; }
+
     public View()  {
 
         buttonCheck2.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    controller.agregarAllCategories();
+                    controller.agregarCategorias();
                 } catch (Exception exce) {
                     throw new RuntimeException(exce);
                 }
@@ -60,7 +59,7 @@ public class View implements PropertyChangeListener{
                 int fila = datosLista.getSelectedRow();
                 if(fila != -1){
                     String nomCategoria = (String) datosLista.getModel().getValueAt(fila, 0);
-                    controller.eliminarLineaCategoria(categoriaNombre);
+                    controller.eliminarCategoria(nomCategoria);
                 }
             }
         });
@@ -81,9 +80,8 @@ public class View implements PropertyChangeListener{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(validar()) {
-                    controller.actualizarRango(
+                    controller.updateRange(
                             Integer.parseInt((String) DesdeAno.getSelectedItem()), DesdeMes.getSelectedIndex() + 1, Integer.parseInt((String) HastaAno.getSelectedItem()), HastaMes.getSelectedIndex() + 1);
-                    )
                 }
             }
         };
@@ -169,17 +167,17 @@ public class View implements PropertyChangeListener{
     }
 
 
-    public void propertyChange(PropertyChangeEvent evt) {
-        switch (evt.getPropertyName()) {
+    public void propertyChange(PropertyChangeEvent ev) {
+        switch (ev.getPropertyName()) {
             case Model.CATEGORIES_ALL:
                 for(Categoria categoria : model.getAllCategorias()) {
                     comboCategoria.addItem(categoria);
                 }
             break;
             case Model.DATA:
-                List<String> listLineas = model.getRows();
-                String[] rows = listLineas.toArray(new String[0]);
-                datosLista.setModel(new EstadisticaTableModel(rows, model.getColumns(), model.getData()));
+                List listLineas = (List) model.getRows();
+                String[] rows = ((java.util.List<?>) listLineas).toArray(new String[0]);
+                datosLista.setModel(new TableModel(rows, model.getColumns(), model.getData()));
                 datosLista.setRowHeight(30);
                 TableColumnModel columnModel = datosLista.getColumnModel();
 
@@ -197,27 +195,27 @@ public class View implements PropertyChangeListener{
                     datosLista.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
                 }
 
-                DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+                DefaultCategoryDataset dataSet = new DefaultCategoryDataset();
 
                 Float[][] data = model.getData();
                 if(data != null && data.length > 0) {
                     for(int i = 0; i < model.getRows().size(); i++) {
                         for(int j = 0; j < model.getColumns().length; j++) {
                             if(i < data.length && j < data[i].length) {
-                                dataSet.addValue(data[i][j], model.getRows(), get(i), model.getColumns()[j]);
+                                dataSet.addValue(data[i][j], model.getRows().get(i), model.getColumns()[j]);
                             }
                         }
                     }
                 }
 
-                JFreeChart lineChart = ChartFactory.createLineChart("Ventas por Mes", "Categoria", "Valores", dataset, PlotOrientation.VERTICAL, true,true,false);
+                JFreeChart lineChart = ChartFactory.createLineChart("Ventas por Mes", "Categoria", "Valores", dataSet, PlotOrientation.VERTICAL, true,true,false);
                 ChartPanel chartPanel = new ChartPanel(lineChart);
 
-                JPanelGrafico.removeALL();
+                JPanelGrafico.removeAll();
                 JPanelGrafico.add(chartPanel);
                 break;
             case Model.RANGE:
-                Controller.actualizarD();
+                controller.actualizarDatos();
                 actualizarV();
                 break;
         }

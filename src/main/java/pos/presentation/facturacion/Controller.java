@@ -9,7 +9,10 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import pos.Application;
-import pos.logic.*;
+import pos.logic.Cajero;
+import pos.logic.Cliente;
+import pos.logic.Linea;
+import pos.logic.Service;
 import pos.data.XmlPersister;
 
 
@@ -46,7 +49,6 @@ public class Controller {
         view.setController(this);
         view.setModel(model);
     }
-
     public void search(Linea filter) throws  Exception{
         model.setFilter(filter);
         model.setMode(Application.MODE_CREATE);
@@ -65,60 +67,17 @@ public class Controller {
             e.printStackTrace();
         }
     }
-
-
-    public void saveFactura(Factura factura) throws Exception {
-        try {
-            switch (model.getMode()) {
-                case Application.MODE_CREATE:
-                    Service.instance().create(factura);
-                    break;
-                case Application.MODE_EDIT:
-                    Service.instance().update(factura);
-                    break;
-            }
-            model.setFilterFactura(new Factura());
-            search(model.getFilter());
-        } catch (Exception ex) {
-            System.out.println("Error al guardar la factura: " + ex.getMessage());
-            throw ex;
+    public void save(Linea e) throws  Exception{
+        switch (model.getMode()) {
+            case Application.MODE_CREATE:
+                Service.instance().create(e);
+                break;
+            case Application.MODE_EDIT:
+                Service.instance().update(e);
+                break;
         }
-    }
-    public void deleteFactura() throws Exception {
-       /* Service.instance().delete(model.getCurrent());
-        search(model.getFilterFactura());
-
-        */
-    }
-
-    public void clearFactura() {
-       /* model.setMode(Application.MODE_CREATE);
-        model.setCurrent(new Factura());
-
-        */
-    }
-
-
-
-    //-----------------------------------De Lineas de Factura----------------------------------------------------
-
-    public void save(Linea e) throws  Exception {
-        try {
-            switch (model.getMode()) {
-                case Application.MODE_CREATE:
-                    Service.instance().create(e);
-                    break;
-                case Application.MODE_EDIT:
-                    Service.instance().update(e);
-                    break;
-            }
-            model.setFilter(new Linea());
-            search(model.getFilter());
-        }
-        catch (Exception ex) {
-            System.out.println("Error al guardar la línea: " + ex.getMessage());
-            throw ex;
-        }
+        model.setFilter(new Linea());
+        search(model.getFilter());
     }
 
     public void edit(int row){
@@ -129,6 +88,7 @@ public class Controller {
         } catch (Exception ex) {}
     }
 
+
     public void delete() throws Exception {
         Service.instance().delete(model.getCurrent());
         search(model.getFilter());
@@ -138,31 +98,4 @@ public class Controller {
         model.setMode(Application.MODE_CREATE);
         model.setCurrent(new Linea());
     }
-    public void actualizarComboBox(){
-        try {
-            // Obtener las listas actualizadas del servicio
-            Service service = Service.instance();
-            List<Cajero> cajeros = service.getCajeros(); // Obtener la lista de cajeros desde el servicio
-            List<Cliente> clientes = service.getClientes(); // Obtener la lista de clientes desde el servicio
-
-            if (cajeros != null && clientes != null) {
-                // Actualizar el modelo con los nuevos datos
-                model.setCajeros(cajeros);
-                model.setClientes(clientes);
-            } else {
-                System.out.println("Error: Los cajeros o clientes son nulos.");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error al actualizar los datos de los ComboBox: " + e.getMessage());
-        }
-    }
-    public String generadorNumFactura(){
-        Service service = Service.instance();
-        int contadorFacturas= service.contadorFacturas;
-        String numeroFactura = "FAC-" + String.format("%04d", contadorFacturas);
-        contadorFacturas++;
-        return numeroFactura;
-    }
-
 }

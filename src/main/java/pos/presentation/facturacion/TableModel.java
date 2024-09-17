@@ -7,6 +7,7 @@ import java.util.List;
 
 public class TableModel extends AbstractTableModel<Linea> implements javax.swing.table.TableModel {
 
+
     public TableModel(int[] cols, List<Linea> rows) {
         super(cols, rows);
     }

@@ -70,9 +70,6 @@ public class Service { //esto es un singleton
                 .collect(Collectors.toList());
     }
 
-    public List <Cliente> getClientes(){
-        return data.getClientes();
-    }
     //================= Cajeros ============
     public void create(Cajero e) throws Exception {
 
@@ -108,9 +105,8 @@ public class Service { //esto es un singleton
                 .sorted(Comparator.comparing(Cajero::getNombre))
                 .collect(Collectors.toList());
     }
-    public List<Cajero> getCajeros(){
-        return data.getCajeros();
-    }
+
+
     //================= Productos ============
     public void create(Producto e) throws Exception {
 
@@ -145,20 +141,16 @@ public class Service { //esto es un singleton
                 .collect(Collectors.toList());
     }
     public List<Producto> searchDescripcion(Producto e) {
-        return this.ProductosFiltroCantidad().stream()
-                .filter(i -> i.getDescripcion().contains(e.getDescripcion()))
-                .sorted(Comparator.comparing(Producto::getDescripcion))
-                .collect(Collectors.toList());
-    }
-    public List<Producto> ProductosFiltroCantidad() {
         return data.getProductos().stream()
-                .filter(i -> i.getExistencias() >= 1) // Filtrar productos con existencia >= 1
+                .filter(i -> i.getDescripcion().contains(e.getDescripcion()))
                 .sorted(Comparator.comparing(Producto::getDescripcion))
                 .collect(Collectors.toList());
     }
     public List<Producto> getProductos() {
         return data.getProductos();  // Retorna la lista completa de productos
     }
+
+
 
     //================= Categoriass ============
 
@@ -200,38 +192,19 @@ public class Service { //esto es un singleton
         return data.getCategorias();  // Retorna la lista completa de productos
     }
 
-    public Producto obtenerProductoEspecifico(Producto produc) {
-        for (Producto producto : data.getProductos()) {
-            if (producto.equals(produc)) {
-                return producto;
-            }
-        }
-        return null;
-    }
     //================= Lineas ============
 
     public void create(Linea e) throws Exception {
-        Linea result = data.getLineas().stream()
-                .filter(i -> i.getProducto().equals(e.getProducto()))
-                .findFirst()
-                .orElse(null);
-        if (result == null) {
-            data.getLineas().add(e);
-        } else {
-            throw new Exception("Linea ya existe");
-        }
+
+        Linea result = data.getLineas().stream().filter(i -> i.getNumero().equals(e.getNumero())).findFirst().orElse(null);
+        if (result == null) data.getLineas().add(e);
+        else throw new Exception("Linea ya existeService");
     }
 
     public Linea read(Linea e) throws Exception {
-        Linea result = data.getLineas().stream()
-                .filter(i -> i.getProducto().equals(e.getProducto()))
-                .findFirst()
-                .orElse(null);
-        if (result != null) {
-            return result;
-        } else {
-            throw new Exception("Linea no existe");
-        }
+        Linea result = data.getLineas().stream().filter(i -> i.getNumero().equals(e.getNumero())).findFirst().orElse(null);
+        if (result != null) return result;
+        else throw new Exception("Linea no existe");
     }
 
     public void update(Linea e) throws Exception {
@@ -251,55 +224,14 @@ public class Service { //esto es un singleton
 
     public List<Linea> search(Linea e) {
         return data.getLineas().stream()
-                .filter(i -> i.getProducto().getCodigo().contains(e.getProducto().getCodigo()))
+                .filter(i -> i.numero.contains(e.getNumero()))
                 .sorted(Comparator.comparing(Linea::getNumero))
                 .collect(Collectors.toList());
     }
-
     public List<Linea> getLineas() {
         return data.getLineas();  // Retorna la lista completa de Lineas
     }
 
-
-
-    //================= Facturas ============
-    public void create(Factura e) throws Exception {
-
-        Factura result = data.getFacturas().stream().filter(i -> i.getNumero().equals(e.getNumero())).findFirst().orElse(null);
-        if (result == null) data.getFacturas().add(e);
-        else throw new Exception("Linea ya existe");
-    }
-
-    public Factura read(Factura e) throws Exception {
-        Factura result = data.getFacturas().stream().filter(i -> i.getNumero().equals(e.getNumero())).findFirst().orElse(null);
-        if (result != null) return result;
-        else throw new Exception("Factura no existe");
-    }
-
-    public void update(Factura e) throws Exception {
-        Factura result;
-        try {
-            result = this.read(e);
-            data.getFacturas().remove(result);
-            data.getFacturas().add(e);
-        } catch (Exception ex) {
-            throw new Exception("Factura no existe");
-        }
-    }
-
-    public void delete(Factura e) throws Exception {
-        data.getFacturas().remove(e);
-    }
-
-    public List<Factura> search(Factura e) {
-        return data.getFacturas().stream()
-                .filter(i -> i.numero.contains(e.getNumero()))
-                .sorted(Comparator.comparing(Factura::getNumero))
-                .collect(Collectors.toList());
-    }
-    public List<Factura> getFacturas() {
-        return data.getFacturas();  // Retorna la lista completa de Facturas
-    }
     public boolean existeLinea(Linea e) {
         for (Linea l : data.getLineas()) {
             if (l.getProducto().getCodigo().equals(e.getProducto().getCodigo())) {
@@ -312,7 +244,7 @@ public class Service { //esto es un singleton
         for (Linea l : data.getLineas()) {
             if (l.getProducto().getCodigo().equals(e.getProducto().getCodigo())) {
                 // Incrementar la cantidad de la línea existente
-                l.setCantidad(l.getCantidad() + 1);
+                l.setCantidad(l.getCantidad() + e.getCantidad());
                 return;
             }
         }
@@ -326,10 +258,14 @@ public class Service { //esto es un singleton
         }
         return null;
     }
-//Esto es para el num
-    public int contadorFacturas=1;
 
+        //================= Facturas ============
+
+    //Para los num de Factura
+    public int contadorFacturas = 1; // Iniciamos en 1
 
 
 }
+
+
 
