@@ -91,6 +91,7 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(panel1, ex.getMessage(), "Información", JOptionPane.INFORMATION_MESSAGE);
                 }
+                controller.actualizarTotales();
             }
         });
         cobrarButton.addActionListener(new ActionListener() {
@@ -98,6 +99,7 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
             public void actionPerformed(ActionEvent e) {
                 //MandarActionListener
                 abrirVentanaCobrar();
+                controller.actualizarTotales();
             }
         });
         buscarButton.addActionListener(new ActionListener() {
@@ -105,6 +107,7 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
             public void actionPerformed(ActionEvent e) {
                 buscarView.setProductoSeleccionadoListener(View.this); // Registrar el View como escuchador
                 abrirVentanaBusqueda();
+                controller.actualizarTotales();
             }
         });
         cantidadButton.addActionListener(new ActionListener() {
@@ -131,6 +134,7 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
                     catch (NumberFormatException ex) {
                         JOptionPane.showMessageDialog(null, "Cantidad inválida. Debe ser un número entero.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
+                controller.actualizarTotales();
             }
         });
 
@@ -139,6 +143,7 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
             public void mouseClicked(MouseEvent e) {
                 int row = list.getSelectedRow();
                 controller.edit(row);
+                controller.actualizarTotales();
             }
         });
         quitarButton.addActionListener(new ActionListener() { //Este es similar al limpiarButton
@@ -156,6 +161,7 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
                 } else {
                     JOptionPane.showMessageDialog(null, "Debe seleccionar una línea para eliminar.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
+                controller.actualizarTotales();
             }
         });
         descuentoButton.addActionListener(new ActionListener() {
@@ -166,6 +172,7 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
                 String descuentoStr= JOptionPane.showInputDialog(null, "Ingresa descuento por aplicar:", lineaSeleccionada.getCantidad());
                 int descuento = Integer.parseInt(descuentoStr);
                 model.getCurrent().setDescuento(descuento);
+                controller.actualizarTotales();
             }
         });
         cancelarButton.addActionListener(new ActionListener() {
@@ -183,6 +190,7 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
                 } catch (Exception ex) {
                     JOptionPane.showMessageDialog(panel1, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
+                controller.actualizarTotales();
             }
         });
 
@@ -190,6 +198,7 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
             @Override
             public void componentShown(ComponentEvent e) {
                 controller.actualizarComboBox();
+                controller.actualizarTotales();
             }
         });
     }
@@ -296,10 +305,8 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
     }
 
     private void abrirVentanaCobrar() {
-        Double total = 0.0;
-        for(Linea temp: Service.instance().getLineas()){ //revisar, tiempo de compilación
-            total+= (temp.getProducto().getPrecioUnitario()-temp.getDescuento());
-        }
+        Double total= model.currentFactura.precioTotalPagar();
+
         if (cobrarView == null) {
             cobrarView  = new cobrarView (total);
             cobrarView .setSize(600, 400);
@@ -307,12 +314,21 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
         }
         cobrarView .setVisible(true);
     }
+    public void actualizarCamposTotales(int totalArticulos, double subtotal, double descuentos, double total) {
+        // Actualizar campos visuales con los nuevos valores
+        ArticuloCantidaTextField.setEditable(false);
+        ArticuloCantidaTextField.setText(String.valueOf(totalArticulos));
+        SubTotalTextField.setText(String.format("%.2f", subtotal));
+        DescuentoTextField.setText(String.format("%.2f", descuentos));
+        TotalTextField.setText(String.format("%.2f", total));
+    }
+    
     public void totalCompra(double total){
         if(total==0){
             //Guardamos la factura
             Factura n= take();
             try {
-                controller.saveFactura(n);
+                controller.saveF(n);
                 JOptionPane.showMessageDialog(panel1, "REGISTRO APLICADO", "", JOptionPane.INFORMATION_MESSAGE);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(panel1, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);

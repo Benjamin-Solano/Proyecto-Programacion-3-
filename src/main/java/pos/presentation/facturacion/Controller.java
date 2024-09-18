@@ -47,12 +47,6 @@ public class Controller {
         view.setModel(model);
     }
 
-    public void search(Linea filter) throws  Exception{
-        model.setFilter(filter);
-        model.setMode(Application.MODE_CREATE);
-        model.setCurrent(new Linea());
-        model.setList(Service.instance().search(model.getFilter()));
-    }
 
     public void init() {
         try {
@@ -66,8 +60,14 @@ public class Controller {
         }
     }
 
+    public void searchF(Factura filter) throws  Exception{
+        model.setFilter(filter);
+        model.setMode(Application.MODE_CREATE);
+        model.setCurrentFactura(new Factura());
+        model.setList(Service.instance().search(model.getFilter()));
+    }
 
-    public void saveFactura(Factura factura) throws Exception {
+    public void saveF(Factura factura) throws Exception {
         try {
             switch (model.getMode()) {
                 case Application.MODE_CREATE:
@@ -77,30 +77,36 @@ public class Controller {
                     Service.instance().update(factura);
                     break;
             }
-            model.setFilterFactura(new Factura());
-            search(model.getFilter());
+            model.setFilter(new Factura());
+            searchF(model.getFilterFactura());
         } catch (Exception ex) {
             System.out.println("Error al guardar la factura: " + ex.getMessage());
             throw ex;
         }
     }
-    public void deleteFactura() throws Exception {
-       /* Service.instance().delete(model.getCurrent());
-        search(model.getFilterFactura());
-
-        */
-    }
 
     public void clearFactura() {
-       /* model.setMode(Application.MODE_CREATE);
-        model.setCurrent(new Factura());
-
-        */
+        model.setMode(Application.MODE_CREATE);
+        model.setCurrentFactura(new Factura());
     }
-
+    public void actualizarTotales() {
+        int totalArticulos = model.currentFactura.cantProductosT();
+        double subtotal = model.currentFactura.precioNetoPagarT();
+        double descuentos = model.currentFactura.ahorroXDescuentoT();
+        double total = model.currentFactura.precioTotalPagar();
+        view.actualizarCamposTotales(totalArticulos, subtotal, descuentos, total);
+    }
 
 
     //-----------------------------------De Lineas de Factura----------------------------------------------------
+
+
+    public void search(Linea filter) throws  Exception{
+        model.setFilter(filter);
+        model.setMode(Application.MODE_CREATE);
+        model.setCurrent(new Linea());
+        model.setList(Service.instance().search(model.getFilter()));
+    }
 
     public void save(Linea e) throws  Exception {
         try {

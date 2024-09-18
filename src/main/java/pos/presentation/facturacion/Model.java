@@ -9,6 +9,7 @@ import java.util.List;
 
 public class Model  extends AbstractModel {
     Factura filterFactura;
+    Factura currentFactura;
     Linea filter;
     List<Linea> list; //Estos son los productos que ha comprado
     Linea current;;
@@ -24,6 +25,10 @@ public class Model  extends AbstractModel {
         firePropertyChange(FILTER);
         firePropertyChange(CAJEROS);
         firePropertyChange(CLIENTES);
+        //Factura general
+        firePropertyChange(LISTFAC);
+        firePropertyChange(CURRENTFAC);
+        firePropertyChange(FILTERFAC);
 
     }
     public void init(List<Linea> list, List<Cajero> cajeros, List<Cliente> clientes) {
@@ -33,6 +38,11 @@ public class Model  extends AbstractModel {
         this.filterFactura=new Factura();
         this.clientes = clientes; // Cargar las clientes
         this.cajeros=cajeros;
+
+        //Factura general
+        this.currentFactura=new Factura();
+        this.filterFactura=new Factura();
+
         firePropertyChange(LIST);
         firePropertyChange(CAJEROS);
         firePropertyChange(CLIENTES);
@@ -67,11 +77,20 @@ public class Model  extends AbstractModel {
     public void setMode(int mode) {this.mode = mode;}
 
     public Factura getFilterFactura(){return filterFactura;}
-    public void setFilterFactura(Factura filter){this.filterFactura=filter; firePropertyChange(FILTER);}
+    public void setFilter(Factura filter){this.filterFactura=filter; firePropertyChange(FILTERFAC);}
 
+    public void setCurrentFactura(Factura current) {this.currentFactura=current; firePropertyChange(CURRENTFAC);}
+    public Factura getCurrentFactura() {return currentFactura;}
+
+
+    //Lista interna
     public static final String LIST="list";
     public static final String CURRENT="current";
     public static final String FILTER="filter";
     public static final String CAJEROS="cajeros";
     public static final String CLIENTES="clientes";
+    //Lista general
+    public static final String CURRENTFAC="currentFactura";
+    public static final String LISTFAC="listFactura";
+    public static final String FILTERFAC="filterFactura";
 }
