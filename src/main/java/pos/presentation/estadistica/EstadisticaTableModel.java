@@ -115,12 +115,12 @@ package pos.presentation.estadistica;
 
 import javax.swing.table.AbstractTableModel;
 
-public class TableModel extends AbstractTableModel {
+public class EstadisticaTableModel extends AbstractTableModel {
     private String[] rows;
     private String[] cols;
     private Float[][] data;
 
-    public TableModel(String[] rows, String[] cols, Float[][] data) {
+    public EstadisticaTableModel(String[] rows, String[] cols, Float[][] data) {
         this.rows = rows;
         this.cols = cols;
         this.data = data;
