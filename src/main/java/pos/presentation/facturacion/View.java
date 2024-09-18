@@ -17,6 +17,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelFacturaCobrar {
@@ -170,10 +171,13 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
         cancelarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for(Linea temp: Service.instance().getLineas()) {
-                    temp.getProducto().setExistencias((int)(temp.getCantidad()+temp.getProducto().getExistencias()));
+                // Actualizar existencias de productos
+                for (Linea temp : Service.instance().getLineas()) {
+                    temp.getProducto().setExistencias((int) (temp.getCantidad() + temp.getProducto().getExistencias()));
                 }
                 try {
+                    // Borrar todas las lineas
+                    Service.instance().getLineas().clear();
                     controller.clear();
                     JOptionPane.showMessageDialog(panel1, "Compra borrada", "", JOptionPane.INFORMATION_MESSAGE);
                 } catch (Exception ex) {
@@ -181,6 +185,7 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
                 }
             }
         });
+
         panel1.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentShown(ComponentEvent e) {

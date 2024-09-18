@@ -38,7 +38,21 @@ public class Factura {
         this.fecha = fecha;
         this.lineas = new ArrayList<>();
     }
-
+    public double precioTotalPagar() {    return this.precioNetoPagarT()-this.ahorroXDescuentoT();}
+    public double precioNetoPagarT() {    double neto = 0.0;
+        for (Linea linea : Service.instance().getLineas()) {
+            neto+=linea.getProducto().getPrecioUnitario()*linea.getCantidad();
+        }
+        return neto;}
+    public double ahorroXDescuentoT() {    double ahorro = 0.0;
+        for (Linea linea : Service.instance().getLineas())
+        {        ahorro+= linea.getProducto().getPrecioUnitario()*linea.getCantidad()*linea.getDescuento();    }
+        return ahorro;}
+    public int cantProductosT(){    int cantidad = 0;
+        for (Linea linea : Service.instance().getLineas()) {
+            cantidad+=linea.getCantidad();
+        }    return cantidad;
+    }
     public Cajero getCajero() {
         return cajero;
     }

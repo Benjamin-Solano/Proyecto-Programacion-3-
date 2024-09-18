@@ -1,103 +1,174 @@
 package pos.presentation.estadistica;
 
-import pos.Application;
-import pos.data.XmlPersister;
 import pos.logic.Categoria;
-import pos.logic.Cliente;
+import pos.logic.Factura;
+import pos.logic.Linea;
 import pos.logic.Service;
 
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.time.Year;
-import java.time.Month;
-import java.time.format.TextStyle;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
-import java.util.stream.IntStream;
+
+import static pos.presentation.estadistica.Model.DATA;
 
 public class Controller {
-  /*
-    View view;
-    Model model;
 
-    private JComboBox<Integer> ComboBoxAnoDesde;
-    private JComboBox<Integer> ComboBoxAnoHasta;
-    private JComboBox<String> ComboBoxMesDesde;
-    private JComboBox<String> ComboBoxMesHasta;
+    private View view;
+    private Model model;
 
-    public Controller() {
+
+    public Controller(View view, Model model) {
+        this.view = view;
+        this.model = model;
+        model.init(new ArrayList<Categoria>(Service.instance().getCategorias()));
+        view.setController(this);
+        view.setModel(model);
+    }
+
+    public void agregarCategoria(Categoria nuevaCategoria) throws Exception {
+
+        if (model.getCategorias().contains(nuevaCategoria)) {throw new Exception();}
+        model.getCategorias().add(nuevaCategoria);
+        actualizarDatos();
+    }
+
+    public void agregarTodasLasCategorias() {
         try {
-            List<Categoria> categorias = XmlPersister.instance().load().getCategorias(); //cargar las categorias
+            List<Categoria> categorias = Service.instance().getCategorias();
+            for (Categoria categoria : categorias) {
+                if (!model.getCategorias().contains(categoria)) {
+                    model.getCategorias().add(categoria);
+                }
+            }
+            actualizarDatos();
+        } catch (Exception e) {
+            System.err.println("Error al agregar todas las categorías: " + e.getMessage());
+        }
+    }
 
-            if (categorias != null) {
-                model.init(categorias);
-                // Si la lista de categorias no está vacía, establecer el primero como actual
-                if (!categorias.isEmpty()) {
-                    model.setCurrent(categorias.get(0));
+    public void botonAgregarCategoriaActionPerformed(Categoria nuevaCategoria) {
+
+    }
+
+    public void clear() {
+        model.clearData();
+        view.actualizarVista();
+    }
+
+    public List<Factura> getFacturas() {
+        try {
+            return Service.instance().getFacturas();
+        } catch (Exception e) {
+            System.out.println("Error al obtener facturas: " + e.getMessage());
+            return null;
+        }
+    }
+
+    public void actualizarRango(int aniodesde, int mesdesde, int anioHasta, int mesHasta) {
+        if (aniodesde <= anioHasta && (aniodesde != anioHasta || mesdesde <= mesHasta)) {
+            model.setRango(new Rango(aniodesde, mesdesde, anioHasta, mesHasta));
+            actualizarDatos();
+        } else {
+            System.err.println("Error: Rango de fechas inválido.");
+        }
+    }
+
+    public void fillCategoriaComboBox() {
+        List<Categoria> categorias = Service.instance().getCategorias();
+        if (categorias != null && !categorias.isEmpty()) {
+            for (Categoria cat : categorias) {
+                view.comboBox5.addItem(cat);
+            }
+            view.getPanel().revalidate();
+        } else {
+            System.out.println("No hay categorías disponibles");
+        }
+    }
+
+    public void agregarLineaACategoria(String categoria, Float[] datos) {
+        if (categoria != null && datos != null) {
+            int index = model.getRows().indexOf(categoria);
+            if (index != -1) {
+                for (int i = 0; i < datos.length; i++) {
+                    model.getData()[index][i] = datos[i];
                 }
             } else {
-                System.out.println("Error: Productos o Categorías son nulos.");
+                model.agregarLinea(categoria, datos);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("No se pueden leer las categorias");
+          actualizarDatos();
+        } else {
+            System.err.println("Error: Categoría o datos inválidos.");
+        }
+    }
+
+    public void eliminarLineaACategoria(String nombreCategoria) {
+        int index = model.getRows().indexOf(nombreCategoria);
+        if (index != -1) {
+            model.eliminarLinea(index);
+        }
+    }
+    public void eliminarCategoria(String nombreCategoria) {
+        model.eliminarCategoriaPorNombre(nombreCategoria);
+    }
+
+    public void actualizarDatos() {
+
+        Rango r = model.getRango();
+        int colCount = (r.getAnnosHasta() - r.getAnnosDesde()) * 12 + r.getMesHasta() - r.getMesDesde() + 1;
+        int rowCount = model.getCategorias().size();
+
+        String[] cols = new String[colCount];
+        String[] rows = new String[rowCount];
+
+        int year = r.getAnnosDesde();
+        int month = r.getMesDesde();
+
+        for (int i = 0; i < colCount; i++) {
+            cols[i] = year + "-" + (month < 10 ? "0" + month : month);
+            month++;
+            if (month > 12) {
+                month = 1;
+                year++;
+            }
         }
 
-        // Inicializar los ComboBox
-        ComboBoxAnoDesde = new JComboBox<>();
-        ComboBoxAnoHasta = new JComboBox<>();
-        ComboBoxMesDesde = new JComboBox<>();
-        ComboBoxMesHasta = new JComboBox<>();
+        Float[][] data = new Float[rowCount][colCount];
 
-        // Configurar los ComboBox de Año
-        int currentYear = Year.now().getValue();
-        IntStream.rangeClosed(currentYear - 3, currentYear + 3)
-                .forEach(year -> {
-                    ComboBoxAnoDesde.addItem(year);
-                    ComboBoxAnoHasta.addItem(year);
-                });
+        if(!model.getCategorias().isEmpty()) {
 
-        // Configurar los ComboBox de Mes
-        for (Month mes : Month.values()) {
-            String nombreMes = mes.getDisplayName(TextStyle.FULL, Locale.getDefault());
-            ComboBoxMesDesde.addItem(nombreMes);
-            ComboBoxMesHasta.addItem(nombreMes);
-        }
+            for (int i = 0; i < rowCount; i++) {
+                Categoria categoria = model.getCategorias().get(i);
+                year = r.getAnnosDesde();
+                month = r.getMesDesde();
 
-        // Añadir ActionListener para la validación de fechas
-        ComboBoxMesHasta.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int anoDesde = (int) ComboBoxAnoDesde.getSelectedItem();
-                int anoHasta = (int) ComboBoxAnoHasta.getSelectedItem();
-                int mesDesde = ComboBoxMesDesde.getSelectedIndex();
-                int mesHasta = ComboBoxMesHasta.getSelectedIndex();
+                for (int j = 0; j < colCount; j++) {
+                    Float ventas = Service.instance().getVentas(categoria, year, month);
+                    data[i][j] = ventas;
 
-                if (anoHasta < anoDesde || (anoHasta == anoDesde && mesHasta <= mesDesde)) {
-                    System.out.println("El mes final debe ser mayor que el mes inicial.");
+                    month++;
+                    if (month > 12) {
+                        month = 1;
+                        year++;
+                    }
                 }
             }
-        });
 
-        // Añadir los ComboBox a la vista
-        view.addComboBox(ComboBoxAnoDesde);
-        view.addComboBox(ComboBoxMesDesde);
-        view.addComboBox(ComboBoxAnoHasta);
-        view.addComboBox(ComboBoxMesHasta);
-    }
-    public void init() {
-        try {
-            // Cargar las categorías desde el archivo XML usando el método de persistencia
-            List<Categoria> categorias = XmlPersister.instance().load().getCategorias();
-        } catch (Exception e) {
-            e.printStackTrace();
+            int i = 0;
+
+            for (Categoria c : model.getCategorias()) {
+
+                rows[i] = c.getNombre();
+                i++;
+            }
+
+            model.setCols(cols);
+            model.setRows(List.of(rows));
+            model.setData(data);
+
+            return;
         }
     }
-    public void clear() {
-        model.setMode(Application.MODE_CREATE);
-        model.setCurrent(new Categoria());
-    }
 
-   */
+
 }

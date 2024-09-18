@@ -73,6 +73,7 @@ public class Service { //esto es un singleton
     public List <Cliente> getClientes(){
         return data.getClientes();
     }
+
     //================= Cajeros ============
     public void create(Cajero e) throws Exception {
 
@@ -111,6 +112,7 @@ public class Service { //esto es un singleton
     public List<Cajero> getCajeros(){
         return data.getCajeros();
     }
+
     //================= Productos ============
     public void create(Producto e) throws Exception {
 
@@ -260,14 +262,29 @@ public class Service { //esto es un singleton
         return data.getLineas();  // Retorna la lista completa de Lineas
     }
 
+    public Float getVentas(Categoria categoria, int anno, int mes) {
+        float totalVentas = 0.0f;
 
+        // Iterar sobre la lista de ventas para filtrar por categoría, año y mes
+        for (Factura venta : data.getFacturas()) {
+            for(Linea linea : venta.getLineas()) {
+                if (linea.getProducto().getCategoria().equals(categoria) &&
+                        venta.getFecha().getYear() == anno &&
+                        venta.getFecha().getMonthValue() == mes) {
+                    totalVentas += venta.precioTotalPagar(); // Acumular el monto de ventas
+
+                }
+            }
+        }
+        return totalVentas;
+    }
 
     //================= Facturas ============
     public void create(Factura e) throws Exception {
 
         Factura result = data.getFacturas().stream().filter(i -> i.getNumero().equals(e.getNumero())).findFirst().orElse(null);
         if (result == null) data.getFacturas().add(e);
-        else throw new Exception("Linea ya existe");
+        else throw new Exception("Factura ya existe");
     }
 
     public Factura read(Factura e) throws Exception {
