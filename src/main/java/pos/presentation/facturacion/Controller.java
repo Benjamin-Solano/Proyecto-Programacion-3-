@@ -14,6 +14,8 @@ import pos.data.XmlPersister;
 
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Controller {
     View view;
@@ -68,6 +70,10 @@ public class Controller {
     }
 
     public void saveF(Factura factura) throws Exception {
+        if (factura == null) {
+            throw new IllegalArgumentException("La factura no puede ser nula");
+        }
+
         try {
             switch (model.getMode()) {
                 case Application.MODE_CREATE:
@@ -76,11 +82,16 @@ public class Controller {
                 case Application.MODE_EDIT:
                     Service.instance().update(factura);
                     break;
+                default:
+                    throw new IllegalStateException("Modo desconocido: " + model.getMode());
             }
+
+            // Restablecer el filtro de facturas
             model.setFilter(new Factura());
-            searchF(model.getFilterFactura());
+            search(model.getFilter());
         } catch (Exception ex) {
-            System.out.println("Error al guardar la factura: " + ex.getMessage());
+            // Usa un logger en lugar de System.out.println para registrar errores
+            Logger.getLogger(getClass().getName()).log(Level.SEVERE, "Error al guardar la factura", ex);
             throw ex;
         }
     }

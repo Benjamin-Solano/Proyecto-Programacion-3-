@@ -90,7 +90,8 @@
                 </constraints>
                 <properties>
                   <horizontalTextPosition value="0"/>
-                  <text value="Uno"/>
+                  <icon value="pos/presentation/icons/check.png"/>
+                  <text value=""/>
                 </properties>
               </component>
               <component id="af889" class="javax.swing.JComboBox" binding="mesDesde">
@@ -172,8 +173,11 @@
                   <grid row="4" column="4" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <actionCommand value=""/>
                   <horizontalTextPosition value="0"/>
-                  <text value="Todos"/>
+                  <icon value="pos/presentation/icons/doble check.png"/>
+                  <label value=""/>
+                  <text value=""/>
                 </properties>
               </component>
               <component id="f54ee" class="javax.swing.JButton" binding="button3">
@@ -181,7 +185,10 @@
                   <grid row="6" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Uno"/>
+                  <actionCommand value=""/>
+                  <icon value="pos/presentation/icons/borrar simple.png"/>
+                  <label value=""/>
+                  <text value=""/>
                 </properties>
               </component>
               <component id="b5ca" class="javax.swing.JButton" binding="button4">
@@ -189,7 +196,8 @@
                   <grid row="6" column="3" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Todos"/>
+                  <icon value="pos/presentation/icons/borrar Todo.png"/>
+                  <text value=""/>
                 </properties>
               </component>
               <grid id="5e0c4" binding="datosPanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">

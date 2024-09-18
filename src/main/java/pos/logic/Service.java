@@ -114,6 +114,7 @@ public class Service { //esto es un singleton
     }
 
     //================= Productos ============
+
     public void create(Producto e) throws Exception {
 
         Producto result = data.getProductos().stream().filter(i -> i.getCodigo().equals(e.getCodigo())).findFirst().orElse(null);
@@ -253,7 +254,7 @@ public class Service { //esto es un singleton
 
     public List<Linea> search(Linea e) {
         return data.getLineas().stream()
-                .filter(i -> i.getProducto().getCodigo().contains(e.getProducto().getCodigo()))
+                .filter(i -> i.getProducto().getDescripcion().contains(e.getProducto().getDescripcion()))
                 .sorted(Comparator.comparing(Linea::getNumero))
                 .collect(Collectors.toList());
     }
@@ -261,7 +262,6 @@ public class Service { //esto es un singleton
     public List<Linea> getLineas() {
         return data.getLineas();  // Retorna la lista completa de Lineas
     }
-
     public Float getVentas(Categoria categoria, int anno, int mes) {
         float totalVentas = 0.0f;
 

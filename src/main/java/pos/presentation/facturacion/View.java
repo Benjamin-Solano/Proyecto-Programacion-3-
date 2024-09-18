@@ -97,9 +97,10 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
         cobrarButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //MandarActionListener
                 abrirVentanaCobrar();
+              //  cobrarView.setSubPanelFacturaCobrar(View.this);
                 controller.actualizarTotales();
+
             }
         });
         buscarButton.addActionListener(new ActionListener() {
@@ -280,7 +281,8 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
                     if (lineaExistente != null) {
                         System.out.println("Línea existente encontrada. Actualizando cantidad...");
                         service.actualizarCantidad(lineaExistente);
-                        JOptionPane.showMessageDialog(null,"Cantidad actualizada correctamente para el producto seleccionado.");
+                        System.out.println("Cantidad actualizada correctamente en la línea existente.");
+                        JOptionPane.showMessageDialog(null, "Producto ya agregado, actualizando cantidad " );
                     } else {
                         System.out.println("Error: La línea existente es null");
                     }
@@ -292,7 +294,8 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
                 try {
                     System.out.println("Guardando nueva línea...");
                     controller.save(nuevaLinea);
-                    JOptionPane.showMessageDialog(null,"Producto agregado correctamente.");
+                    System.out.println("Línea procesada correctamente.");
+                    JOptionPane.showMessageDialog(null, "El producto se agrego " );
                 } catch (Exception e) {
                     JOptionPane.showMessageDialog(null, "Error al guardar la línea: " + e.getMessage());
                     throw new RuntimeException(e);
@@ -312,9 +315,15 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
             cobrarView .setSize(600, 400);
             cobrarView .setLocationRelativeTo(null);
         }
+        cobrarView.setSubPanelFacturaCobrar(this);
         cobrarView .setVisible(true);
     }
     public void actualizarCamposTotales(int totalArticulos, double subtotal, double descuentos, double total) {
+        ArticuloCantidaTextField.setEnabled(false);
+        SubTotalTextField.setEnabled(false);
+        DescuentoTextField.setEnabled(false);
+        TotalTextField.setEnabled(false);
+
         // Actualizar campos visuales con los nuevos valores
         ArticuloCantidaTextField.setEditable(false);
         ArticuloCantidaTextField.setText(String.valueOf(totalArticulos));
@@ -333,7 +342,6 @@ public class View implements PropertyChangeListener, SubPanelesFactura,SubPanelF
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(panel1, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-
             //lipiamos todos los campos
         }else{
             cobrarView.setVisible(false);

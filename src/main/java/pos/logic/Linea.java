@@ -30,6 +30,8 @@ public class Linea {
         this.cantidad = cantidad;
         this.descuento = descuento;
     }
+
+    // Getters y setters
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -42,6 +44,7 @@ public class Linea {
     public int hashCode() {
         return Objects.hash(producto);
     }
+
     public String getNumero() {return numero;}
     public void setNumero(String numero) {this.numero = numero;}
 

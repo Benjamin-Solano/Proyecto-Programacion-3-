@@ -26,8 +26,8 @@ public class Controller {
 
     public Controller(View view, Model model) {
         try {
-            List<Factura> facturas = XmlPersister.instance().load().getFacturas();
-            List<Linea> lineas = XmlPersister.instance().load().getLineas();
+            List<Factura> facturas = Service.instance().getFacturas();
+            List<Linea> lineas = Service.instance().getLineas();
 
             if (facturas != null && lineas != null) {
                 model.init(facturas, lineas);
