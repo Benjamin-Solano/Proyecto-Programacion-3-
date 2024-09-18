@@ -4,7 +4,6 @@ import java.io.*;
 
 public class MatrizDataSer {
 
-
     public static void serializarMatriz(Float[][] matriz, String archivo) throws IOException {
         try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(archivo))) {
             out.writeObject(matriz);

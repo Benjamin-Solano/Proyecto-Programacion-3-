@@ -59,8 +59,8 @@ public class Controller {
 
     public void init() {
         try {
-            List<Factura> facturas = XmlPersister.instance().load().getFacturas();
-            List<Linea> lineas = XmlPersister.instance().load().getLineas();
+            List<Factura> facturas =Service.instance().getFacturas();
+            List<Linea> lineas = Service.instance().getLineas();
             model.init(facturas,lineas);
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,14 +71,18 @@ public class Controller {
         try {
             model.setMode(Application.MODE_EDIT);
             model.setCurrentFactura(Service.instance().read(e));
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
     public void editLineas(int row){
         Linea e = model.getListLineas().get(row);
         try {
             model.setMode(Application.MODE_EDIT);
             model.setCurrentLinea(Service.instance().read(e));
-        } catch (Exception ex) {}
+        } catch (Exception ex) {
+             ex.printStackTrace();
+        }
     }
 
     public void print()throws Exception{
@@ -108,12 +112,10 @@ public class Controller {
         body.addCell(getCell(new Paragraph("Factura").setBackgroundColor(bkg).setFontColor(frg), true));
         body.addCell(getCell(new Paragraph("Producto").setBackgroundColor(bkg).setFontColor(frg), true));
 
-
         for(Factura e: model.getListFacturas()){
             body.addCell(getCell(new Paragraph(e.getNumero()), true));
             body.addCell(getCell(new Paragraph(String.valueOf(e.getCajero().getId())), true));
             body.addCell(getCell(new Paragraph(String.valueOf(e.getFecha().getMonth())), true));
-
         }
         for(Linea e:model.getListLineas()){
             body.addCell(getCell(new Paragraph(e.getProducto().getCodigo()), true));
@@ -122,7 +124,6 @@ public class Controller {
             body.addCell(getCell(new Paragraph(e.getProducto().getUnidadDeMedida()), true));
             body.addCell(getCell(new Paragraph(String.valueOf(e.getProducto().getPrecioUnitario())), true));
         }
-
         document.add(body);
         document.close();
     }
